@@ -1,0 +1,16 @@
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Login Form -->
+      <form [formGroup]="checkoutForm">
+        <input type="text" id="login" class="fadeIn second" placeholder="login" formControlName="username">
+        <input type="text" id="password" class="fadeIn third" placeholder="password" formControlName="password">
+        <input type="submit" class="fadeIn fourth" value="Log In" (click)="Login()">
+      </form>
+  
+      <!-- Remind Passowrd -->
+      <div id="formFooter">
+        <a class="underlineHover" href="#">Forgot Password?</a>
+      </div>
+  
+    </div>
+  </div>

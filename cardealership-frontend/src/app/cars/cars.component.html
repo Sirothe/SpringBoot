@@ -1,0 +1,20 @@
+<!-- CARDS -->
+<div class="container">
+    <div class="row">
+        <div *ngFor="let car of cars" class="col-sm-6 col-lg-3 mb-2-6">
+            <div class="card-wrapper mb-4">
+                <div class="card-img"><img src="https://via.placeholder.com/240x240/FFB6C1/000000" alt="..."></div>
+                <div class="card-body">
+                    <div>
+                        <a href="#"><i class="bg-white p-3 rounded-circle ti-shopping-cart font-weight-600"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <h4 class="h5 mb-2"><a class="text-secondary">{{car.name}}</a></h4>
+                <h4 class="h5 mb-2"><a class="text-after">{{car.model}}</a></h4>
+                <h5 class="mb-0 text-primary">${{car.price}}</h5>
+            </div>
+        </div>
+    </div>
+</div>
