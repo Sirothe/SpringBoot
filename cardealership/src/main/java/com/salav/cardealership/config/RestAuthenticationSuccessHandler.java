@@ -33,5 +33,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
                 .withExpiresAt(new Date(System.currentTimeMillis()+ expirationTime))
                 .sign(Algorithm.HMAC256(secret));
         response.addHeader("Authorization","Bearer "+ token);
+        response.addHeader("Username", principal.getUsername());
+        response.addHeader("Roles",principal.getAuthorities().toString());
     }
 }
