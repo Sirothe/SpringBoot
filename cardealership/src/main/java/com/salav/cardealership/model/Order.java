@@ -26,8 +26,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long orderId, Long carBought, String name, String model, Long clientId, String status) {
-        this.orderId = orderId;
+    public Order(Long carBought, String name, String model, Long clientId, String status) {
         this.carBought = carBought;
         this.name = name;
         this.model = model;
