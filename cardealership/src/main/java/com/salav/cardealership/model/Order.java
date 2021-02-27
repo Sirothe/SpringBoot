@@ -1,5 +1,7 @@
 package com.salav.cardealership.model;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,12 +12,14 @@ public class Order {
     @Column(name = "order_id", nullable = false, updatable = false)
     private Long orderId;
     @Column(name = "car_id", nullable = false)
+    @NotNull
     private Long carBought;
     @Column(name = "car_name")
     private String name;
     @Column(name = "car_model")
     private String model;
     @Column(name = "client_id", nullable = false)
+    @NotNull
     private Long clientId;
     private String status;
 

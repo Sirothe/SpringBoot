@@ -3,23 +3,24 @@ package com.salav.cardealership.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="clients")
+@Table(name = "clients")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private Long clientId;
-    private String imie;
-    private String nazwisko;
+    private String name;
+    private String surname;
     private String email;
     private String number;
 
     public Client() {
     }
 
-    public Client(String imie, String nazwisko, String email, String number, String nrZamowienia, String status) {
-        this.imie = imie;
-        this.nazwisko = nazwisko;
+    public Client(Long clientId, String name, String surname, String email, String number) {
+        this.clientId = clientId;
+        this.name = name;
+        this.surname = surname;
         this.email = email;
         this.number = number;
     }
@@ -32,20 +33,20 @@ public class Client {
         this.clientId = clientId;
     }
 
-    public String getImie() {
-        return imie;
+    public String getName() {
+        return name;
     }
 
-    public void setImie(String imie) {
-        this.imie = imie;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getNazwisko() {
-        return nazwisko;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setNazwisko(String nazwisko) {
-        this.nazwisko = nazwisko;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {
