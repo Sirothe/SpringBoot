@@ -31,7 +31,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [CarService,TokenInterceptor],
+  providers: [CarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
