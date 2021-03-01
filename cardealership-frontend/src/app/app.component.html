@@ -15,7 +15,8 @@
       <!-- <a class="nav-item nav-link disabled">Disabled</a> -->
     </div>
     <div class="navbar-nav ml-auto">
-      <a class="nav-item nav-link" routerLink='login'>login</a>
+      <a class="nav-item nav-link" *ngIf="!isLoggedIn()" routerLink='login'>login</a>
+      <a class="nav-item nav-link" *ngIf="isLoggedIn()" (click)="LogOut()" routerLink='home'>logout</a>
     </div>
   </div>
 </nav>

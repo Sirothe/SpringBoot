@@ -1,6 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
     password:''
   });
 
-  constructor(private http:HttpClient,private formBuilder:FormBuilder) { }
+  constructor(private http:HttpClient,private formBuilder:FormBuilder,private router:Router) { }
 
   ngOnInit(): void {
   }
@@ -27,9 +28,7 @@ export class LoginComponent implements OnInit {
     {username:this.checkoutForm.get('username').value,password:this.checkoutForm.get('password').value},{observe: 'response'})
     .subscribe(resp => this.dataUpdate(resp));
     this.checkoutForm.reset();
-    console.log(sessionStorage.getItem('token'))
-    console.log(sessionStorage.getItem('username'))
-    console.log(sessionStorage.getItem('roles'))
+    this.router.navigateByUrl('/home');
   }
 
   getToken():string {
