@@ -4,9 +4,8 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpErrorResponse
 } from '@angular/common/http';
-import { empty, Observable, throwError } from 'rxjs';
+import { empty, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginComponent } from '../login/login.component';

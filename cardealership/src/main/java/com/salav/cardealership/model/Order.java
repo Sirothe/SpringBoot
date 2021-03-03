@@ -13,14 +13,14 @@ public class Order {
     private Long orderId;
     @Column(name = "car_id", nullable = false)
     @NotNull
-    private Long carBought;
+    private Long carBought; //change to car object
     @Column(name = "car_name")
     private String name;
     @Column(name = "car_model")
     private String model;
     @Column(name = "client_id", nullable = false)
     @NotNull
-    private Long clientId;
+    private Long clientId; //change to client object
     private String status;
 
     public Order() {

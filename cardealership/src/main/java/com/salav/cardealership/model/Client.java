@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(nullable = false, updatable = false)
+    @Column(name = "client_id", nullable = false, updatable = false)
     private Long clientId;
     private String name;
     private String surname;
@@ -17,7 +17,8 @@ public class Client {
     public Client() {
     }
 
-    public Client(String name, String surname, String email, String number) {
+    public Client(Long clientId, String name, String surname, String email, String number) {
+        this.clientId = clientId;
         this.name = name;
         this.surname = surname;
         this.email = email;

@@ -22,5 +22,7 @@ export class AppComponent implements OnInit{
 
   LogOut():void {
     sessionStorage.setItem('token',"");
+    sessionStorage.setItem('username',"");
+    sessionStorage.setItem('roles',"");
   }
 }
