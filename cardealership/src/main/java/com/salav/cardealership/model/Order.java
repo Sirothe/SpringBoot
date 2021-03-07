@@ -11,26 +11,22 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false, updatable = false)
     private Long orderId;
-    @Column(name = "car_id", nullable = false)
     @NotNull
-    private Long carBought; //change to car object
-    @Column(name = "car_name")
-    private String name;
-    @Column(name = "car_model")
-    private String model;
-    @Column(name = "client_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "car_id", referencedColumnName = "car_id")
+    private Car car;
     @NotNull
-    private Long clientId; //change to client object
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "client_id", referencedColumnName = "client_id")
+    private Client client;
     private String status;
 
     public Order() {
     }
 
-    public Order(Long carBought, String name, String model, Long clientId, String status) {
-        this.carBought = carBought;
-        this.name = name;
-        this.model = model;
-        this.clientId = clientId;
+    public Order(Car car, Client client, String status) {
+        this.car = car;
+        this.client = client;
         this.status = status;
     }
 
@@ -42,36 +38,20 @@ public class Order {
         this.orderId = orderId;
     }
 
-    public Long getCarBought() {
-        return carBought;
+    public Car getCar() {
+        return car;
     }
 
-    public void setCarBought(Long carBought) {
-        this.carBought = carBought;
+    public void setCar(Car car) {
+        this.car = car;
     }
 
-    public String getName() {
-        return name;
+    public Client getClient() {
+        return client;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public Long getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public String getStatus() {

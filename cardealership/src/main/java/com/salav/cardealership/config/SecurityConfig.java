@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -59,8 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/car/all").permitAll()
-                .antMatchers("/car/find/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/car/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -94,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:4200");
         config.addAllowedHeader("*");
-        config.addExposedHeader("Authorization, Username, Roles");
+        config.addExposedHeader("Authorization, Username, Roles, pageNow, pageMax, TotalItems");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("HEAD");
         config.addAllowedMethod("GET");

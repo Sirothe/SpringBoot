@@ -28,7 +28,7 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> getOrderById (@PathVariable("id") Long id) {
         Order order = orderService.findOrderById(id);
@@ -42,14 +42,14 @@ public class OrderController {
         return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
+    @PutMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> updateOrder(@RequestBody Order order) {
         Order newOrder = orderService.updateOrder(order);
         return new ResponseEntity<>(newOrder,HttpStatus.OK);
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Order> deleteOrder(@PathVariable("id") Long id) {
         orderService.deleteOrder(id);

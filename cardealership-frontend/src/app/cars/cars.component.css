@@ -98,3 +98,21 @@
 .text-primary {
     color: #eeff04 !important;
 }
+.btn-primary {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.btn-secondary {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.btn-danger {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.modal-title {
+    color: black;
+}
+.col-form-label {
+    color: black;
+}

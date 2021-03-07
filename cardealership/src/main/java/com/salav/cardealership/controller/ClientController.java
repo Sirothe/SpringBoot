@@ -16,7 +16,6 @@ import java.util.List;
 public class ClientController {
     private final ClientService clientService;
 
-    @Autowired
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
@@ -28,28 +27,28 @@ public class ClientController {
         return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 
-    @GetMapping("/find/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Client> getClientById (@PathVariable("id") Long id) {
         Client client = clientService.findClientById(id);
         return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Client> addClient(@RequestBody Client client) {
         Client newClient = clientService.addClient(client);
         return new ResponseEntity<>(newClient, HttpStatus.CREATED);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Client> updateClient(@RequestBody Client client) {
         Client newClient = clientService.updateClient(client);
         return new ResponseEntity<>(newClient,HttpStatus.OK);
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Client> deleteClient(@PathVariable("id") Long id) {
         clientService.deleteClient(id);

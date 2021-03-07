@@ -27,4 +27,12 @@ export class CarsComponent implements OnInit {
       }
     )
   }
+
+  isAdmin():boolean {
+    if(sessionStorage.getItem('roles') === "[ROLE_ADMIN]") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

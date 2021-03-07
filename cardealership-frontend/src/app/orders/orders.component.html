@@ -1,1 +1,45 @@
-<p>orders works!</p>
+<!-- Button for add -->
+<button type="button" class="btn btn-primary">
+  <i class="fas fa-plus"></i> Add Order
+</button>
+
+<!-- table for data -->
+<table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Car name</th>
+        <th scope="col">Car model</th>
+        <th scope="col">Cli name</th>
+        <th scope="col">Cli surname</th>
+        <th scope="col">Cli number</th>
+        <th scope="col">status</th>
+        <th scope="col" style="width: 140px;">Action Button</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{order.orderId}}</td>
+        <td>{{order.car.name}}</td>
+        <td>{{order.car.model}}</td>
+        <td>{{order.client.name}}</td>
+        <td>{{order.client.surname}}</td>
+        <td>{{order.client.number}}</td>
+        <td>{{order.status}}</td>
+        <td>
+          <a class="table-link  text-info">
+          <span class="fa-stack">
+              <i class="fa fa-square fa-stack-2x"></i>
+              <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+          </span>
+          </a>
+          <a class="table-link  text-danger">
+          <span class="fa-stack">
+              <i class="fa fa-square fa-stack-2x"></i>
+              <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
+          </span>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>

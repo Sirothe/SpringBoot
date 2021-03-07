@@ -12,6 +12,14 @@ export class AppComponent implements OnInit{
     sessionStorage.setItem('token',"");
   }
 
+  isAdmin():boolean {
+    if(sessionStorage.getItem('roles') === "[ROLE_ADMIN]") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   isLoggedIn():boolean {
     if(sessionStorage.getItem('token') === "") {
       return false;

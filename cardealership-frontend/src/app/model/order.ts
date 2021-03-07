@@ -1,8 +1,9 @@
+import { Car } from "./car";
+import { Client } from "./client";
+
 export interface Order {
     orderId:number;
-    carId:number;
-    carName:string;
-    carModel:string;
-    clientId:string;
+    car:Car;
+    client:Client;
     status:string;
 }

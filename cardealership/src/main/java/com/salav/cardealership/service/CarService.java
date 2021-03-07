@@ -4,6 +4,9 @@ import com.salav.cardealership.exception.ElementNotFoundException;
 import com.salav.cardealership.model.Car;
 import com.salav.cardealership.repo.CarRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +38,10 @@ public class CarService {
 
     public void deleteCar(Long id) {
         carRepo.deleteById(id);
+    }
+
+    public Page<Car> findPaginated(int pageN, int pageS) {
+        Pageable pageable = PageRequest.of(pageN-1,pageS);
+        return this.carRepo.findAll(pageable);
     }
 }

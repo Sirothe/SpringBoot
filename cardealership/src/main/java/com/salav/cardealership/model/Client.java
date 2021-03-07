@@ -17,8 +17,7 @@ public class Client {
     public Client() {
     }
 
-    public Client(Long clientId, String name, String surname, String email, String number) {
-        this.clientId = clientId;
+    public Client(String name, String surname, String email, String number) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -64,4 +63,5 @@ public class Client {
     public void setNumber(String number) {
         this.number = number;
     }
+
 }
