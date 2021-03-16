@@ -1,8 +1,12 @@
 package com.salav.cardealership.controller;
 
+import com.salav.cardealership.model.Client;
 import com.salav.cardealership.model.Order;
 import com.salav.cardealership.service.OrderService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +25,18 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/page/{pageNumber}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Order>> getAllOrders () {
-        List<Order> orders = orderService.findAllOrders();
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+    public ResponseEntity<List<Order>> findPaginatedOrders(@PathVariable (value = "pageNumber") int pageN) {
+        int pageS=5;
+        Page<Order> page = orderService.findPaginatedOrders(pageN,pageS);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("pageNow", String.valueOf(pageN));
+        headers.add("pageMax",String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        List<Order> listOrders = page.getContent();
+
+        return new ResponseEntity<>(listOrders,headers,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

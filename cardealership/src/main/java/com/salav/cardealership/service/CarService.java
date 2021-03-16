@@ -20,12 +20,13 @@ public class CarService {
         this.carRepo = carRepo;
     }
 
-    public Car addCar(Car car) {
-        return carRepo.save(car);
+    public Page<Car> findPaginatedCars(int pageN, int pageS) {
+        Pageable pageable = PageRequest.of(pageN-1,pageS);
+        return this.carRepo.findAll(pageable);
     }
 
-    public List<Car> findAllCars() {
-        return carRepo.findAll();
+    public Car addCar(Car car) {
+        return carRepo.save(car);
     }
 
     public Car updateCar(Car car) {
@@ -40,8 +41,4 @@ public class CarService {
         carRepo.deleteById(id);
     }
 
-    public Page<Car> findPaginated(int pageN, int pageS) {
-        Pageable pageable = PageRequest.of(pageN-1,pageS);
-        return this.carRepo.findAll(pageable);
-    }
 }

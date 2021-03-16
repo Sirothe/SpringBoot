@@ -1,9 +1,13 @@
 package com.salav.cardealership.service;
 
 import com.salav.cardealership.exception.ElementNotFoundException;
+import com.salav.cardealership.model.Client;
 import com.salav.cardealership.model.Order;
 import com.salav.cardealership.repo.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,12 +21,13 @@ public class OrderService {
         this.orderRepo = orderRepo;
     }
 
-    public Order addOrder(Order order) {
-        return orderRepo.save(order);
+    public Page<Order> findPaginatedOrders(int pageN, int pageS) {
+        Pageable pageable = PageRequest.of(pageN-1,pageS);
+        return this.orderRepo.findAll(pageable);
     }
 
-    public List<Order> findAllOrders() {
-        return orderRepo.findAll();
+    public Order addOrder(Order order) {
+        return orderRepo.save(order);
     }
 
     public Order updateOrder(Order order) {

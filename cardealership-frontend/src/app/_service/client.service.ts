@@ -17,7 +17,7 @@ export class ClientService {
   }
 
   public addClient(client: Client): Observable<Client> {
-    return this.http.post<Client>(`${this.apiServerUrl}/client/add`, client);
+    return this.http.post<Client>(`${this.apiServerUrl}/client`, client);
   }
 
   public updateClient(client: Client): Observable<Client> {
@@ -25,6 +25,6 @@ export class ClientService {
   }
 
   public deleteClient(clientID: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiServerUrl}/client/delete/${clientID}`);
+    return this.http.delete<void>(`${this.apiServerUrl}/client/${clientID}`);
   }
 }

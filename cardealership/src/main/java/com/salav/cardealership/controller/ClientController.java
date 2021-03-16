@@ -3,6 +3,8 @@ package com.salav.cardealership.controller;
 import com.salav.cardealership.model.Client;
 import com.salav.cardealership.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,16 +22,22 @@ public class ClientController {
         this.clientService = clientService;
     }
 
-    @GetMapping("/all")
+    @GetMapping("/page/{pageNumber}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Client>> getAllClients () {
-        List<Client> clients = clientService.findAllClients();
-        return new ResponseEntity<>(clients, HttpStatus.OK);
+    public ResponseEntity<List<Client>> findPaginatedClients(@PathVariable (value = "pageNumber") int pageN) {
+        int pageS=5;
+        Page<Client> page = clientService.findPaginatedClients(pageN,pageS);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("pageNow", String.valueOf(pageN));
+        headers.add("pageMax",String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        List<Client> listClients = page.getContent();
+        return new ResponseEntity<>(listClients,headers,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Client> getClientById (@PathVariable("id") Long id) {
+    public ResponseEntity<Client> getClientById(@PathVariable("id") Long id) {
         Client client = clientService.findClientById(id);
         return new ResponseEntity<>(client, HttpStatus.OK);
     }

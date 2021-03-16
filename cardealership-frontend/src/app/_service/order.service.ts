@@ -17,7 +17,7 @@ export class OrderService {
   }
 
   public addOrder(order: Order): Observable<Order> {
-    return this.http.post<Order>(`${this.apiServerUrl}/order/add`, order);
+    return this.http.post<Order>(`${this.apiServerUrl}/order`, order);
   }
 
   public updateOrder(order: Order): Observable<Order> {
@@ -25,6 +25,6 @@ export class OrderService {
   }
 
   public deleteOrder(orderID: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiServerUrl}/order/delete/${orderID}`);
+    return this.http.delete<void>(`${this.apiServerUrl}/order/${orderID}`);
   }
 }

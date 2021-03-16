@@ -23,10 +23,17 @@ public class CarController {
         this.carService = carService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<Car>> getAllCars () {
-        List<Car> cars = carService.findAllCars();
-        return new ResponseEntity<>(cars, HttpStatus.OK);
+    @GetMapping("/page/{pageNumber}")
+    public ResponseEntity<List<Car>> findPaginated(@PathVariable (value = "pageNumber") int pageN) {
+        int pageS = 5;
+        Page<Car> page = carService.findPaginatedCars(pageN,pageS);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("pageNow", String.valueOf(pageN));
+        headers.add("pageMax",String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        List<Car> listCars = page.getContent();
+
+        return new ResponseEntity<>(listCars,headers,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -54,18 +61,5 @@ public class CarController {
     public ResponseEntity<Car> deleteCar(@PathVariable("id") Long id) {
         carService.deleteCar(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/page/{pageN}")
-    public ResponseEntity<List<Car>> findPaginated(@PathVariable (value = "pageN") int pageN) {
-        int pageS = 5;
-        Page<Car> page = carService.findPaginated(pageN,pageS);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("pageNow", String.valueOf(pageN));
-        headers.add("pageMax",String.valueOf(page.getTotalPages()));
-        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
-        List<Car> listCars = page.getContent();
-
-        return new ResponseEntity<>(listCars,headers,HttpStatus.OK);
     }
 }
