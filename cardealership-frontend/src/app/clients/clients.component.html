@@ -8,8 +8,7 @@
     <thead>
       <tr>
         <th scope="col">ID</th>
-        <th scope="col">Name</th>
-        <th scope="col">Surname</th>
+        <th scope="col">Full Name</th>
         <th scope="col">email</th>
         <th scope="col">number</th>
         <th scope="col" style="width: 140px;">A button</th>
@@ -18,8 +17,7 @@
     <tbody>
       <tr *ngFor="let client of clients">
         <td>{{client.clientId}}</td>
-        <td>{{client.name}}</td>
-        <td>{{client.surname}}</td>
+        <td>{{client.fullName}}</td>
         <td>{{client.email}}</td>
         <td>{{client.number}}</td>
         <td>
