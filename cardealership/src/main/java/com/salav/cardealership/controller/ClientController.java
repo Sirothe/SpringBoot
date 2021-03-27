@@ -25,7 +25,7 @@ public class ClientController {
         this.clientMapper = clientMapper;
     }
 
-    @GetMapping("/page/{pageNumber}")
+    @GetMapping("/p={pageNumber}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ClientDTO>> findPaginatedClients(@PathVariable (value = "pageNumber") int pageN) {
         int pageS=5;
@@ -42,6 +42,18 @@ public class ClientController {
     public ResponseEntity<ClientDTO> getClientById(@PathVariable("id") Long id) {
         ClientDTO client = clientMapper.toDto(clientService.findClientById(id));
         return new ResponseEntity<>(client, HttpStatus.OK);
+    }
+
+    @GetMapping("/name={name}/p={pageNumber}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ClientDTO>> findPaginatedClientsByName(@PathVariable (value = "pageNumber") int pageN,@PathVariable (value = "name") String name) {
+        int pageS=5;
+        Page<Client> page = clientService.findPaginatedClientsByName(pageN,pageS,name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("pageMax",String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        List<ClientDTO> listClients = clientMapper.toClientDto(page.getContent());
+        return new ResponseEntity<>(listClients,headers,HttpStatus.OK);
     }
 
     @PostMapping()

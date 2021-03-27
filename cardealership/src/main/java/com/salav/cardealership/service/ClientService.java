@@ -1,6 +1,7 @@
 package com.salav.cardealership.service;
 
 import com.salav.cardealership.exception.ElementNotFoundException;
+import com.salav.cardealership.model.Car;
 import com.salav.cardealership.model.Client;
 import com.salav.cardealership.repo.ClientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class ClientService {
 
     public Client findClientById(Long id) {
         return clientRepo.findById(id).orElseThrow(() -> new ElementNotFoundException("Car by id"+ id + "was not found"));
+    }
+
+    public Page<Client> findPaginatedClientsByName(int pageN, int pageS, String name) {
+        Pageable pageable = PageRequest.of(pageN-1,pageS);
+        return clientRepo.findByNameContains(name,pageable);
     }
 
     public void deleteClient(Long id) {

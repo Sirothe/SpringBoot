@@ -37,6 +37,11 @@ public class CarService {
         return carRepo.findById(id).orElseThrow(() -> new ElementNotFoundException("Car by id"+ id + "was not found"));
     }
 
+    public Page<Car> findPaginatedCarsByName(int pageN,int pageS,String name) {
+        Pageable pageable = PageRequest.of(pageN-1,pageS);
+        return carRepo.findByNameContains(name,pageable);
+    }
+
     public void deleteCar(Long id) {
         carRepo.deleteById(id);
     }

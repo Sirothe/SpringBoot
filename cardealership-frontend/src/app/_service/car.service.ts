@@ -13,9 +13,9 @@ export class CarService {
   constructor(private http: HttpClient) { }
 
   public getCars(pageNumber:number): Observable<Car[]> {
-    this.http.get(`${this.apiServerUrl}/car/page/${pageNumber}`,{observe: 'response'})
+    this.http.get(`${this.apiServerUrl}/car/p=${pageNumber}`,{observe: 'response'})
     .subscribe(resp => this.headerSaver(resp))
-    return this.http.get<Car[]>(`${this.apiServerUrl}/car/page/${pageNumber}`);
+    return this.http.get<Car[]>(`${this.apiServerUrl}/car/p=${pageNumber}`);
   }
 
   public addCar(car: Car): Observable<Car> {

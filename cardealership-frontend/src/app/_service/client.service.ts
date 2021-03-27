@@ -13,9 +13,9 @@ export class ClientService {
   constructor(private http:HttpClient) { }
 
   public getClients(pageNumber:number): Observable<Client[]> {
-    this.http.get<Client[]>(`${this.apiServerUrl}/client/page/${pageNumber}`,{observe: 'response'})
+    this.http.get<Client[]>(`${this.apiServerUrl}/client/p=${pageNumber}`,{observe: 'response'})
     .subscribe(resp => this.headerSaver(resp));
-    return this.http.get<Client[]>(`${this.apiServerUrl}/client/page/${pageNumber}`);
+    return this.http.get<Client[]>(`${this.apiServerUrl}/client/p=${pageNumber}`);
   }
 
   public addClient(client: Client): Observable<Client> {

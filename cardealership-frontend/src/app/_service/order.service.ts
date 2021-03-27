@@ -13,9 +13,9 @@ export class OrderService {
   constructor(private http:HttpClient) { }
 
   public getOrders(pageNumber:number): Observable<Order[]> {
-    this.http.get<Order[]>(`${this.apiServerUrl}/order/page/${pageNumber}`,{observe: 'response'})
+    this.http.get<Order[]>(`${this.apiServerUrl}/order/p=${pageNumber}`,{observe: 'response'})
     .subscribe(resp => this.headerSaver(resp));
-    return this.http.get<Order[]>(`${this.apiServerUrl}/order/page/${pageNumber}`);
+    return this.http.get<Order[]>(`${this.apiServerUrl}/order/p=${pageNumber}`);
   }
 
   public addOrder(order: Order): Observable<Order> {

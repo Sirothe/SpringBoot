@@ -27,7 +27,7 @@ public class OrderController {
         this.orderMapper = orderMapper;
     }
 
-    @GetMapping("/page/{pageNumber}")
+    @GetMapping("/p={pageNumber}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OrderDTO>> findPaginatedOrders(@PathVariable (value = "pageNumber") int pageN) {
         int pageS=5;
@@ -36,7 +36,6 @@ public class OrderController {
         headers.add("pageMax",String.valueOf(page.getTotalPages()));
         headers.add("TotalItems",String.valueOf(page.getTotalElements()));
         List<OrderDTO> listOrders = orderMapper.toDtoList(page.getContent());
-
         return new ResponseEntity<>(listOrders,headers,HttpStatus.OK);
     }
 
@@ -45,6 +44,30 @@ public class OrderController {
     public ResponseEntity<OrderDTO> getOrderById (@PathVariable("id") Long id) {
         OrderDTO order = orderMapper.toDto(orderService.findOrderById(id));
         return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @GetMapping("/cliname=?{name}/p={pageNumber}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<OrderDTO>> findPaginatedOrdersByClientName(@PathVariable (value = "pageNumber") int pageN,@PathVariable (value = "name") String name) {
+        int pageS=5;
+        Page<Order> page = orderService.findPaginatedOrdersByClientName(name, pageN-1,pageS);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("pageMax",String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        List<OrderDTO> listOrders = orderMapper.toDtoList(page.getContent());
+        return new ResponseEntity<>(listOrders,headers,HttpStatus.OK);
+    }
+
+    @GetMapping("/caname=?{name}/p={pageNumber}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<OrderDTO>> findPaginatedOrdersByCarName(@PathVariable (value = "pageNumber") int pageN,@PathVariable (value = "name") String name) {
+        int pageS=5;
+        Page<Order> page = orderService.findPaginatedOrdersByCarName(name, pageN-1,pageS);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("pageMax",String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        List<OrderDTO> listOrders = orderMapper.toDtoList(page.getContent());
+        return new ResponseEntity<>(listOrders,headers,HttpStatus.OK);
     }
 
     @PostMapping("/add")

@@ -23,22 +23,32 @@ public class CarController {
         this.carService = carService;
     }
 
-    @GetMapping("/page/{pageNumber}")
-    public ResponseEntity<List<Car>> findPaginated(@PathVariable (value = "pageNumber") int pageN) {
+    @GetMapping("/p={pageNumber}")
+    public ResponseEntity<List<Car>> findPaginated(@PathVariable(value = "pageNumber") int pageN) {
         int pageS = 5;
-        Page<Car> page = carService.findPaginatedCars(pageN,pageS);
+        Page<Car> page = carService.findPaginatedCars(pageN, pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageMax",String.valueOf(page.getTotalPages()));
-        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        headers.add("pageMax", String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems", String.valueOf(page.getTotalElements()));
         List<Car> listCars = page.getContent();
-
-        return new ResponseEntity<>(listCars,headers,HttpStatus.OK);
+        return new ResponseEntity<>(listCars, headers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Car> getCarById (@PathVariable("id") Long id) {
+    public ResponseEntity<Car> getCarById(@PathVariable("id") Long id) {
         Car car = carService.findCarById(id);
         return new ResponseEntity<>(car, HttpStatus.OK);
+    }
+
+    @GetMapping("/nm={name}/p={pageNumber}")
+    public ResponseEntity<List<Car>> findPaginatedCarsByName(@RequestParam int pageN, @RequestParam String name) {
+        int pageS = 5;
+        Page<Car> page = carService.findPaginatedCarsByName(pageN, pageS, name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("pageMax", String.valueOf(page.getTotalPages()));
+        headers.add("TotalItems", String.valueOf(page.getTotalElements()));
+        List<Car> listCars = page.getContent();
+        return new ResponseEntity<>(listCars, headers, HttpStatus.OK);
     }
 
     @PostMapping("/add")
@@ -52,7 +62,7 @@ public class CarController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Car> updateCar(@RequestBody Car car) {
         Car newCar = carService.updateCar(car);
-        return new ResponseEntity<>(newCar,HttpStatus.OK);
+        return new ResponseEntity<>(newCar, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
