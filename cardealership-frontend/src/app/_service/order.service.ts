@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -12,8 +12,10 @@ export class OrderService {
 
   constructor(private http:HttpClient) { }
 
-  public getOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.apiServerUrl}/order/all`);
+  public getOrders(pageNumber:number): Observable<Order[]> {
+    this.http.get<Order[]>(`${this.apiServerUrl}/order/page/${pageNumber}`,{observe: 'response'})
+    .subscribe(resp => this.headerSaver(resp));
+    return this.http.get<Order[]>(`${this.apiServerUrl}/order/page/${pageNumber}`);
   }
 
   public addOrder(order: Order): Observable<Order> {
@@ -26,5 +28,10 @@ export class OrderService {
 
   public deleteOrder(orderID: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/order/${orderID}`);
+  }
+
+  public headerSaver(data:HttpResponse<Object>):void {
+    sessionStorage.setItem('maxPage',data.headers.get('pagemax'));
+    sessionStorage.setItem('totalItems',data.headers.get('totalitems'));
   }
 }

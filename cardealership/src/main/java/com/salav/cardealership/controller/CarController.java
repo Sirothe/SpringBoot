@@ -28,7 +28,6 @@ public class CarController {
         int pageS = 5;
         Page<Car> page = carService.findPaginatedCars(pageN,pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageNow", String.valueOf(pageN));
         headers.add("pageMax",String.valueOf(page.getTotalPages()));
         headers.add("TotalItems",String.valueOf(page.getTotalElements()));
         List<Car> listCars = page.getContent();

@@ -10,15 +10,17 @@ import { CarService } from '../_service/car.service';
 })
 export class CarsComponent implements OnInit {
   public cars:Car[];
+  public pageNow:number;
 
   constructor(private CarService:CarService) { }
 
   ngOnInit(): void {
-    this.getCars();
+    this.getCars(1);
+    this.pageNow=1;
   }
 
-  public getCars():void {
-    this.CarService.getCars().subscribe(
+  public getCars(page:number):void {
+    this.CarService.getCars(page).subscribe(
       (response: Car[]) => {
         this.cars=response;
       },
@@ -33,6 +35,24 @@ export class CarsComponent implements OnInit {
       return true;
     } else {
       return false;
+    }
+  }
+
+  NextPage():void {
+    if(sessionStorage.getItem('maxPage')==String(this.pageNow+1)) {
+      this.pageNow=this.pageNow+1;
+      this.getCars(this.pageNow);
+      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = true;
+      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = false;
+    }
+  }
+  
+  PrevPage():void {
+    if(this.pageNow-1==1) {
+      this.pageNow=this.pageNow-1;
+      this.getCars(this.pageNow);
+      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
+      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
     }
   }
 }

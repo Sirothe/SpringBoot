@@ -1,7 +1,13 @@
 <!-- Button trigger modal -->
 <button type="button" *ngIf="isAdmin()" class="btn btn-primary">
-    <i class="fas fa-plus"></i> Add Car
-  </button>
+  <i class="fas fa-plus"></i> Add Car
+</button>
+<button type="button" disabled id="btnPrevPage" class="btn btn-primary" (click)="PrevPage()">
+  <i class="fas fa-plus"></i> Prev Page
+</button>
+<button type="button" id="btnNextPage" class="btn btn-primary" (click)="NextPage()">
+  <i class="fas fa-plus"></i> Next Page
+</button>
 
 <!-- ADD Modal -->
 <div class="modal fade" id="addCarModal" tabindex="-1" role="dialog" aria-labelledby="addCarModalLabel" aria-hidden="true">

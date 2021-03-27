@@ -2,8 +2,8 @@
     <div id="formContent">
       <!-- Login Form -->
       <form [formGroup]="checkoutForm">
-        <input type="text" id="login" class="fadeIn second" placeholder="login" formControlName="username">
-        <input type="text" id="password" class="fadeIn third" placeholder="password" formControlName="password">
+        <input type="text" autocomplete="off" id="login" class="fadeIn second" placeholder="login" formControlName="username">
+        <input type="password" autocomplete="off" id="password" class="fadeIn third" placeholder="password" formControlName="password">
         <input type="submit" class="fadeIn fourth" value="Log In" (click)="Login()">
       </form>
   

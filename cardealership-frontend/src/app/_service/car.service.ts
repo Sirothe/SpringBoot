@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Car } from '../model/car';
 
@@ -12,8 +12,10 @@ export class CarService {
 
   constructor(private http: HttpClient) { }
 
-  public getCars(): Observable<Car[]> {
-    return this.http.get<Car[]>(`${this.apiServerUrl}/car/all`);
+  public getCars(pageNumber:number): Observable<Car[]> {
+    this.http.get(`${this.apiServerUrl}/car/page/${pageNumber}`,{observe: 'response'})
+    .subscribe(resp => this.headerSaver(resp))
+    return this.http.get<Car[]>(`${this.apiServerUrl}/car/page/${pageNumber}`);
   }
 
   public addCar(car: Car): Observable<Car> {
@@ -26,5 +28,10 @@ export class CarService {
 
   public deleteCar(carID: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/car/${carID}`);
+  }
+
+  public headerSaver(data:HttpResponse<Object>):void {
+    sessionStorage.setItem('maxPage',data.headers.get('pagemax'));
+    sessionStorage.setItem('totalItems',data.headers.get('totalitems'));
   }
 }

@@ -10,6 +10,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     sessionStorage.setItem('token',"");
+    sessionStorage.setItem('roles',"");
   }
 
   isAdmin():boolean {

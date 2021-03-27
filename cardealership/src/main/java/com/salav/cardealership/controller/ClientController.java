@@ -31,7 +31,6 @@ public class ClientController {
         int pageS=5;
         Page<Client> page = clientService.findPaginatedClients(pageN,pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageNow", String.valueOf(pageN));
         headers.add("pageMax",String.valueOf(page.getTotalPages()));
         headers.add("TotalItems",String.valueOf(page.getTotalElements()));
         List<ClientDTO> listClients = clientMapper.toClientDto(page.getContent());

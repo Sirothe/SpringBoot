@@ -10,15 +10,17 @@ import { ClientService } from '../_service/client.service';
 })
 export class ClientsComponent implements OnInit {
   public clients:Client[];
+  public pageNow:number;
 
   constructor(private ClientService:ClientService) { }
 
   ngOnInit(): void {
-    this.getClients();
+    this.getClients(1);
+    this.pageNow=1;
   }
 
-  public getClients():void {
-    this.ClientService.getClients().subscribe(
+  public getClients(page:number):void {
+    this.ClientService.getClients(page).subscribe(
       (response: Client[]) => {
         this.clients=response;
       },
@@ -26,5 +28,23 @@ export class ClientsComponent implements OnInit {
         alert(error.message);
       }
     )
+  }
+
+  NextPage():void {
+    if(sessionStorage.getItem('maxPage')==String(this.pageNow+1)) {
+      this.pageNow=this.pageNow+1;
+      this.getClients(this.pageNow);
+      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = true;
+      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = false;
+    }
+  }
+  
+  PrevPage():void {
+    if(this.pageNow-1==1) {
+      this.pageNow=this.pageNow-1;
+      this.getClients(this.pageNow);
+      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
+      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
+    }
   }
 }

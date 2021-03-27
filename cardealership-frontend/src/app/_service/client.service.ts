@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -12,8 +12,10 @@ export class ClientService {
 
   constructor(private http:HttpClient) { }
 
-  public getClients(): Observable<Client[]> {
-    return this.http.get<Client[]>(`${this.apiServerUrl}/client/all`);
+  public getClients(pageNumber:number): Observable<Client[]> {
+    this.http.get<Client[]>(`${this.apiServerUrl}/client/page/${pageNumber}`,{observe: 'response'})
+    .subscribe(resp => this.headerSaver(resp));
+    return this.http.get<Client[]>(`${this.apiServerUrl}/client/page/${pageNumber}`);
   }
 
   public addClient(client: Client): Observable<Client> {
@@ -26,5 +28,10 @@ export class ClientService {
 
   public deleteClient(clientID: number): Observable<void> {
     return this.http.delete<void>(`${this.apiServerUrl}/client/${clientID}`);
+  }
+
+  public headerSaver(data:HttpResponse<Object>):void {
+    sessionStorage.setItem('maxPage',data.headers.get('pagemax'));
+    sessionStorage.setItem('totalItems',data.headers.get('totalitems'));
   }
 }

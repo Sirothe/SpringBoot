@@ -1,11 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { error } from 'protractor';
-import { Car } from '../model/car';
-import { Client } from '../model/client';
 import { Order } from '../model/order';
-import { CarService } from '../_service/car.service';
-import { ClientService } from '../_service/client.service';
 import { OrderService } from '../_service/order.service';
 
 @Component({
@@ -15,19 +10,17 @@ import { OrderService } from '../_service/order.service';
 })
 export class OrdersComponent implements OnInit {
   public orders:Order[];
-  public cars:Car[];
-  public clients:Client[];
+  public pageNow:number;
 
-  constructor(private OrderService:OrderService,private CarService:CarService,private ClientService:ClientService) { }
+  constructor(private OrderService:OrderService) { }
 
   ngOnInit(): void {
-    this.getOrders();
-    this.getCars();
-    this.getClients();
+    this.getOrders(1);
+    this.pageNow=1;
   }
 
-  public getOrders():void {
-    this.OrderService.getOrders().subscribe(
+  public getOrders(page:number):void {
+    this.OrderService.getOrders(page).subscribe(
       (response: Order[]) => {
         this.orders=response;
       },
@@ -36,24 +29,22 @@ export class OrdersComponent implements OnInit {
       }
     )
   }
-  public getCars():void {
-    this.CarService.getCars().subscribe(
-      (response: Car[]) => {
-        this.cars=response;
-      },
-      (error:HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+
+  NextPage():void {
+    if(sessionStorage.getItem('maxPage')==String(this.pageNow+1)) {
+      this.pageNow=this.pageNow+1;
+      this.getOrders(this.pageNow);
+      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = true;
+      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = false;
+    }
   }
-  public getClients():void {
-    this.ClientService.getClients().subscribe(
-      (response: Client[]) => {
-        this.clients=response;
-      },
-      (error:HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+  
+  PrevPage():void {
+    if(this.pageNow-1==1) {
+      this.pageNow=this.pageNow-1;
+      this.getOrders(this.pageNow);
+      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
+      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
+    }
   }
 }

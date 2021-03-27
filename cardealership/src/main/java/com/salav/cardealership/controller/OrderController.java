@@ -33,7 +33,6 @@ public class OrderController {
         int pageS=5;
         Page<Order> page = orderService.findPaginatedOrders(pageN,pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageNow", String.valueOf(pageN));
         headers.add("pageMax",String.valueOf(page.getTotalPages()));
         headers.add("TotalItems",String.valueOf(page.getTotalElements()));
         List<OrderDTO> listOrders = orderMapper.toDtoList(page.getContent());
