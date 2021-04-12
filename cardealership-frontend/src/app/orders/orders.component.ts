@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Car } from '../model/car';
@@ -30,12 +31,16 @@ export class OrdersComponent implements OnInit {
   ngOnInit(): void {
     this.getOrders(1);
     this.pageNow = 1;
+    this.search = 0;
   }
 
   public getOrders(page: number): void {
     this.OrderService.getOrders(page).subscribe(
       (response: Order[]) => {
         this.orders = response;
+        if(Number(sessionStorage.getItem('maxPage'))==1) {
+          (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -47,6 +52,9 @@ export class OrdersComponent implements OnInit {
     this.OrderService.getOrdersByClientName(page, name).subscribe(
       (response: Order[]) => {
         this.orders = response;
+        if(Number(sessionStorage.getItem('maxPage'))==1) {
+          (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -58,6 +66,9 @@ export class OrdersComponent implements OnInit {
     this.OrderService.getOrdersByCarName(page, name).subscribe(
       (response: Order[]) => {
         this.orders = response;
+        if(Number(sessionStorage.getItem('maxPage'))==1) {
+          (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -150,6 +161,7 @@ export class OrdersComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
       (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
     } else {
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
       if (this.search == 0) {
         this.getOrders(this.pageNow);
       } else if (this.search == 1) {
@@ -166,6 +178,9 @@ export class OrdersComponent implements OnInit {
     this.search = 0;
     (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
     (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
+    if(Number(sessionStorage.getItem('maxPage'))==1) {
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+    }
   }
 
   public onOpenModal(order: Order, mode: string): void {

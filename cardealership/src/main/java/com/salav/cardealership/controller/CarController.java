@@ -73,9 +73,7 @@ public class CarController {
     @PutMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CarDTO> updateCar(@RequestBody CarDTO car) {
-        System.out.println(car.toString());
         Car newCar = carMapper.fromDto(car);
-        System.out.println(newCar.toString());
         carService.updateCar(newCar);
         return new ResponseEntity<>(car, HttpStatus.OK);
     }

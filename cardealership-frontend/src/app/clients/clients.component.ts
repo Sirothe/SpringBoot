@@ -22,12 +22,16 @@ export class ClientsComponent implements OnInit {
   ngOnInit(): void {
     this.getClients(1);
     this.pageNow = 1;
+    this.search = false;
   }
 
   public getClients(page: number): void {
     this.ClientService.getClients(page).subscribe(
       (response: Client[]) => {
         this.clients = response;
+        if(Number(sessionStorage.getItem('maxPage'))==1) {
+          (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -39,6 +43,9 @@ export class ClientsComponent implements OnInit {
     this.ClientService.getClientsByName(page, name).subscribe(
       (response: Client[]) => {
         this.clients = response;
+        if(Number(sessionStorage.getItem('maxPage'))==1) {
+          (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -49,11 +56,11 @@ export class ClientsComponent implements OnInit {
   searchCheck(): void {
     this.namefield = (<HTMLInputElement>document.getElementById("inSearch")).value;
     if (this.namefield != "") {
-      this.search = false;
+      this.search = true;
       this.pageNow = 1;
       this.getClientsByName(this.pageNow, this.namefield);
     } else {
-      this.search = true;
+      this.search = false;
       this.pageNow = 1;
       this.getClients(this.pageNow);
     }
@@ -90,6 +97,7 @@ export class ClientsComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
       (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
     } else if (this.pageNow - 1 != 1) {
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
       this.pageNow = this.pageNow - 1;
       if (this.search == false) {
         this.getClients(this.pageNow);
@@ -105,6 +113,9 @@ export class ClientsComponent implements OnInit {
     this.search = false;
     (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
     (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
+    if(Number(sessionStorage.getItem('maxPage'))==1) {
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+    }
   }
 
   public onOpenModal(client: Client, mode: string): void {

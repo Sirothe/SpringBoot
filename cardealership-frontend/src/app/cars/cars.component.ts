@@ -30,6 +30,9 @@ export class CarsComponent implements OnInit {
     this.CarService.getCars(page).subscribe(
       (response: Car[]) => {
         this.cars = response;
+        if(Number(sessionStorage.getItem('maxPage'))==1) {
+          (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -41,6 +44,9 @@ export class CarsComponent implements OnInit {
     this.CarService.getCarsbyName(page, name).subscribe(
       (response: Car[]) => {
         this.cars = response;
+        if(Number(sessionStorage.getItem('maxPage'))==1) {
+          (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+        }
       },
       (error: HttpErrorResponse) => {
         alert(error.message);
@@ -90,7 +96,7 @@ export class CarsComponent implements OnInit {
   }
 
   PrevPage(): void {
-    if (this.pageNow - 1 == 1) {
+    if (this.pageNow - 1 == 1 ) {
       this.pageNow = this.pageNow - 1;
       if (this.search == false) {
         this.getCars(this.pageNow);
@@ -100,6 +106,7 @@ export class CarsComponent implements OnInit {
       (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
       (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
     } else if (this.pageNow - 1 != 1) {
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
       this.pageNow = this.pageNow - 1;
       if (this.search == false) {
         this.getCars(this.pageNow);
@@ -115,6 +122,9 @@ export class CarsComponent implements OnInit {
     this.search = false;
     (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
     (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
+    if(Number(sessionStorage.getItem('maxPage'))==1) {
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+    }
   }
 
   public onOpenModal(car: Car, mode: string): void {
