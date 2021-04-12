@@ -60,7 +60,7 @@
       </div>
       <div class="modal-body">
         <form #editFormCar="ngForm">
-          <input type="hidden" ngModel="{{editCar?.carId}}" name="carId" class="form-control" id="car-id-edit">
+          <input type="hidden" ngModel="{{editCar?.id}}" name="id" class="form-control" id="car-id-edit">
           <div class="form-group">
             <label for="car-model-edit" class="col-form-label">Model:</label>
             <input type="text" autocomplete="off" ngModel="{{editCar?.model}}" required name="model"
@@ -102,7 +102,7 @@
         <p class="modal-text">Are you sure you want to delete Car - {{deleteCar?.model}} {{deleteCar?.name}}?</p>
         <div class="modal-footer">
           <button type="button" id="close-form-car-delete" class="btn btn-dark" data-dismiss="modal">No</button>
-          <button (click)="onDeleteCar(deleteCar?.carId)" class="btn btn-danger">Yes</button>
+          <button (click)="onDeleteCar(deleteCar?.id)" class="btn btn-danger">Yes</button>
         </div>
       </div>
     </div>

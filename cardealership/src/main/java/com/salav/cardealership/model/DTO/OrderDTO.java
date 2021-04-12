@@ -1,17 +1,16 @@
 package com.salav.cardealership.model.dto;
 
-import com.salav.cardealership.model.Car;
 
 public class OrderDTO {
     private Long orderId;
-    private Car car;
+    private CarDTO car;
     private ClientDTO client;
     private String status;
 
     public OrderDTO() {
     }
 
-    public OrderDTO(Car car, ClientDTO client, String status) {
+    public OrderDTO(CarDTO car, ClientDTO client, String status) {
         this.car = car;
         this.client = client;
         this.status = status;
@@ -25,11 +24,11 @@ public class OrderDTO {
         this.orderId = orderId;
     }
 
-    public Car getCar() {
+    public CarDTO getCar() {
         return car;
     }
 
-    public void setCar(Car car) {
+    public void setCar(CarDTO car) {
         this.car = car;
     }
 

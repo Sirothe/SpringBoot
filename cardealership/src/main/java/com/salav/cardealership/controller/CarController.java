@@ -1,6 +1,8 @@
 package com.salav.cardealership.controller;
 
+import com.salav.cardealership.mapper.CarMapper;
 import com.salav.cardealership.model.Car;
+import com.salav.cardealership.model.dto.CarDTO;
 import com.salav.cardealership.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,20 +19,22 @@ import java.util.List;
 @RequestMapping("/car")
 public class CarController {
     private final CarService carService;
+    private final CarMapper carMapper;
 
     @Autowired
-    public CarController(CarService carService) {
+    public CarController(CarService carService, CarMapper carMapper) {
         this.carService = carService;
+        this.carMapper = carMapper;
     }
 
     @GetMapping("/p={pageNumber}")
-    public ResponseEntity<List<Car>> findPaginated(@PathVariable(value = "pageNumber") int pageN) {
+    public ResponseEntity<List<CarDTO>> findPaginated(@PathVariable(value = "pageNumber") int pageN) {
         int pageS = 5;
         Page<Car> page = carService.findPaginatedCars(pageN, pageS);
         HttpHeaders headers = new HttpHeaders();
         headers.add("pageMax", String.valueOf(page.getTotalPages()));
         headers.add("TotalItems", String.valueOf(page.getTotalElements()));
-        List<Car> listCars = page.getContent();
+        List<CarDTO> listCars = carMapper.toCarDto(page.getContent());
         return new ResponseEntity<>(listCars, headers, HttpStatus.OK);
     }
 
@@ -41,13 +45,13 @@ public class CarController {
     }
 
     @GetMapping("/nm={name}/p={pageNumber}")
-    public ResponseEntity<List<Car>> findPaginatedCarsByName(@PathVariable (value = "pageNumber") int pageN, @PathVariable (value = "name") String name) {
+    public ResponseEntity<List<CarDTO>> findPaginatedCarsByName(@PathVariable (value = "pageNumber") int pageN, @PathVariable (value = "name") String name) {
         int pageS = 5;
         Page<Car> page = carService.findPaginatedCarsByName(pageN, pageS, name);
         HttpHeaders headers = new HttpHeaders();
         headers.add("pageMax", String.valueOf(page.getTotalPages()));
         headers.add("TotalItems", String.valueOf(page.getTotalElements()));
-        List<Car> listCars = page.getContent();
+        List<CarDTO> listCars = carMapper.toCarDto(page.getContent());
         return new ResponseEntity<>(listCars, headers, HttpStatus.OK);
     }
 
@@ -60,16 +64,20 @@ public class CarController {
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Car> addCar(@RequestBody Car car) {
-        Car newCar = carService.addCar(car);
-        return new ResponseEntity<>(newCar, HttpStatus.CREATED);
+    public ResponseEntity<CarDTO> addCar(@RequestBody CarDTO car) {
+        Car newCar = carMapper.fromDto(car);
+        carService.addCar(newCar);
+        return new ResponseEntity<>(car, HttpStatus.CREATED);
     }
 
     @PutMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Car> updateCar(@RequestBody Car car) {
-        Car newCar = carService.updateCar(car);
-        return new ResponseEntity<>(newCar, HttpStatus.OK);
+    public ResponseEntity<CarDTO> updateCar(@RequestBody CarDTO car) {
+        System.out.println(car.toString());
+        Car newCar = carMapper.fromDto(car);
+        System.out.println(newCar.toString());
+        carService.updateCar(newCar);
+        return new ResponseEntity<>(car, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -10,130 +10,152 @@ import { ClientService } from '../_service/client.service';
   styleUrls: ['./clients.component.css']
 })
 export class ClientsComponent implements OnInit {
-  public clients:Client[];
-  public pageNow:number;
-  public namefield:string;
-  public search:boolean;
-  public editClient:Client;
-  public deleteClient:Client;
+  public clients: Client[];
+  public pageNow: number;
+  public namefield: string;
+  public search: boolean;
+  public editClient: Client;
+  public deleteClient: Client;
 
-  constructor(private ClientService:ClientService) { }
+  constructor(private ClientService: ClientService) { }
 
   ngOnInit(): void {
     this.getClients(1);
-    this.pageNow=1;
+    this.pageNow = 1;
   }
 
-  public getClients(page:number):void {
+  public getClients(page: number): void {
     this.ClientService.getClients(page).subscribe(
       (response: Client[]) => {
-        this.clients=response;
+        this.clients = response;
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
 
-  public getClientsByName(page:number,name:string):void {
-    this.ClientService.getClientsByName(page,name).subscribe(
+  public getClientsByName(page: number, name: string): void {
+    this.ClientService.getClientsByName(page, name).subscribe(
       (response: Client[]) => {
-        this.clients=response;
+        this.clients = response;
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
 
-  searchCheck():void {
+  searchCheck(): void {
     this.namefield = (<HTMLInputElement>document.getElementById("inSearch")).value;
-    if(this.namefield!="") {
-      this.search=false;
-      this.pageNow=1;
-      this.getClientsByName(this.pageNow,this.namefield);
+    if (this.namefield != "") {
+      this.search = false;
+      this.pageNow = 1;
+      this.getClientsByName(this.pageNow, this.namefield);
     } else {
-      this.search=true;
-      this.pageNow=1;
+      this.search = true;
+      this.pageNow = 1;
       this.getClients(this.pageNow);
     }
   }
 
-  NextPage():void {
-    if(sessionStorage.getItem('maxPage')==String(this.pageNow+1)) {
-      this.pageNow=this.pageNow+1;
-      this.getClients(this.pageNow);
-      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = true;
-      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = false;
-    }
-  }
-  
-  PrevPage():void {
-    if(this.pageNow-1==1) {
-      this.pageNow=this.pageNow-1;
-      this.getClients(this.pageNow);
-      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
-      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
+  NextPage(): void {
+    if (Number(sessionStorage.getItem('maxPage')) == this.pageNow + 1) {
+      this.pageNow = this.pageNow + 1;
+      if (this.search == false) {
+        this.getClients(this.pageNow);
+      } else {
+        this.getClientsByName(this.pageNow, this.namefield);
+      }
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+      (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = false;
+    } else if (Number(sessionStorage.getItem('maxPage')) != this.pageNow + 1) {
+      this.pageNow = this.pageNow + 1;
+      if (this.search == false) {
+        this.getClients(this.pageNow);
+      } else {
+        this.getClientsByName(this.pageNow, this.namefield);
+      }
     }
   }
 
-  PageReset():void {
+  PrevPage(): void {
+    if (this.pageNow - 1 == 1) {
+      this.pageNow = this.pageNow - 1;
+      if (this.search == false) {
+        this.getClients(this.pageNow);
+      } else {
+        this.getClientsByName(this.pageNow, this.namefield);
+      }
+      (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
+    } else if (this.pageNow - 1 != 1) {
+      this.pageNow = this.pageNow - 1;
+      if (this.search == false) {
+        this.getClients(this.pageNow);
+      } else {
+        this.getClientsByName(this.pageNow, this.namefield);
+      }
+    }
+  }
+
+  PageReset(): void {
     this.getClients(1);
-    this.pageNow=1;
-    this.search=false;
-    (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
-    (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
+    this.pageNow = 1;
+    this.search = false;
+    (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
+    (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
   }
 
-  public onOpenModal(client:Client,mode:string):void {
+  public onOpenModal(client: Client, mode: string): void {
     const container = document.getElementById('container-buttons');
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
-    button.setAttribute('data-toggle','modal');
-    if(mode === 'add') {
-      button.setAttribute('data-target','#addClientModal');
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#addClientModal');
     } else if (mode === 'edit') {
       this.editClient = client;
-      button.setAttribute('data-target','#editClientModal');
+      button.setAttribute('data-target', '#editClientModal');
     } else if (mode === 'delete') {
       this.deleteClient = client;
-      button.setAttribute('data-target','#deleteClientModal');
+      button.setAttribute('data-target', '#deleteClientModal');
     }
     container.appendChild(button);
     button.click();
   }
 
-  public onAddClient(addForm:NgForm):void {
+  public onAddClient(addForm: NgForm): void {
     document.getElementById("close-form-client-add").click();
     console.log(addForm.value);
     this.ClientService.addClient(addForm.value).subscribe(
-      (resp:Client) => {
+      (resp: Client) => {
         this.PageReset();
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
-  
-  public onUpdateClient(client:Client):void {
+
+  public onUpdateClient(client: Client): void {
     document.getElementById("close-form-client-edit").click();
-    this.ClientService.updateClient(client).subscribe((resp:Client) => {
+    this.ClientService.updateClient(client).subscribe((resp: Client) => {
       this.PageReset();
     },
-    (error:HttpErrorResponse) => {
-      alert(error.message);
-    })
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      })
   }
 
-  public onDeleteClient(clientId:number):void {
+  public onDeleteClient(clientId: number): void {
     document.getElementById("close-form-client-delete").click();
-    this.ClientService.deleteClient(clientId).subscribe((resp:void) => {
+    this.ClientService.deleteClient(clientId).subscribe((resp: void) => {
       this.PageReset();
     },
-    (error:HttpErrorResponse) => {
-      alert(error.message);
-    })
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      })
   }
 }

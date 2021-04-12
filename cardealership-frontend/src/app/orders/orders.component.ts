@@ -14,182 +14,211 @@ import { OrderService } from '../_service/order.service';
   styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent implements OnInit {
-  public orders:Order[];
-  public pageNow:number;
-  public namefield:string;
-  public search:boolean;
-  public optionCars:Car[];
-  public optionClients:Client[];
-  public car:Car;
-  public client:Client;
-  public editOrder:Order;
-  public deleteOrder:Order;
+  public orders: Order[];
+  public pageNow: number;
+  public namefield: string;
+  public search: number; // NOTHING - 0 , CLIENT - 1 , CAR - 2
+  public optionCars: Car[];
+  public optionClients: Client[];
+  public car: Car;
+  public client: Client;
+  public editOrder: Order;
+  public deleteOrder: Order;
 
-  constructor(private OrderService:OrderService,private CarService:CarService,private ClientService:ClientService) { }
+  constructor(private OrderService: OrderService, private CarService: CarService, private ClientService: ClientService) { }
 
   ngOnInit(): void {
     this.getOrders(1);
-    this.pageNow=1;
+    this.pageNow = 1;
   }
 
-  public getOrders(page:number):void {
+  public getOrders(page: number): void {
     this.OrderService.getOrders(page).subscribe(
       (response: Order[]) => {
-        this.orders=response;
+        this.orders = response;
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
 
-  public getOrdersByClientName(page:number,name:string):void {
-    this.OrderService.getOrdersByClientName(page,name).subscribe(
+  public getOrdersByClientName(page: number, name: string): void {
+    this.OrderService.getOrdersByClientName(page, name).subscribe(
       (response: Order[]) => {
-        this.orders=response;
+        this.orders = response;
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
 
-  public getOrdersByCarName(page:number,name:string):void {
-    this.OrderService.getOrdersByCarName(page,name).subscribe(
+  public getOrdersByCarName(page: number, name: string): void {
+    this.OrderService.getOrdersByCarName(page, name).subscribe(
       (response: Order[]) => {
-        this.orders=response;
+        this.orders = response;
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
 
-  public getOptionsCarByName(name:string):void {
+  public getOptionsCarByName(name: string): void {
     this.CarService.getAllCarsByName(name).subscribe(
       (response: Car[]) => {
-        this.optionCars=response;
+        this.optionCars = response;
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
 
-  public getOptionsClientsByName(name:string):void {
+  public getOptionsClientsByName(name: string): void {
     this.ClientService.getAllClientsByName(name).subscribe(
       (response: Client[]) => {
-        this.optionClients=response;
+        this.optionClients = response;
       },
-      (error:HttpErrorResponse) => {
+      (error: HttpErrorResponse) => {
         alert(error.message);
       }
     )
   }
 
-  searchCheckClientName():void {
+  searchCheckClientName(): void {
     this.namefield = (<HTMLInputElement>document.getElementById("inSearch")).value;
-    if(this.namefield!="") {
-      this.search=false;
-      this.pageNow=1;
-      this.getOrdersByClientName(this.pageNow,this.namefield);
+    if (this.namefield != "") {
+      this.search = 1;
+      this.pageNow = 1;
+      this.getOrdersByClientName(this.pageNow, this.namefield);
     } else {
-      this.search=true;
-      this.pageNow=1;
+      this.search = 0;
+      this.pageNow = 1;
       this.getOrders(this.pageNow);
     }
   }
 
-  searchCheckCarName():void {
+  searchCheckCarName(): void {
     this.namefield = (<HTMLInputElement>document.getElementById("inSearch")).value;
-    if(this.namefield!="") {
-      this.search=false;
-      this.pageNow=1;
-      this.getOrdersByCarName(this.pageNow,this.namefield);
+    if (this.namefield != "") {
+      this.search = 2;
+      this.pageNow = 1;
+      this.getOrdersByCarName(this.pageNow, this.namefield);
     } else {
-      this.search=true;
-      this.pageNow=1;
+      this.search = 0;
+      this.pageNow = 1;
       this.getOrders(this.pageNow);
     }
   }
 
-  NextPage():void {
-    if(sessionStorage.getItem('maxPage')==String(this.pageNow+1)) {
-      this.pageNow=this.pageNow+1;
-      this.getOrders(this.pageNow);
-      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = true;
-      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = false;
-    }
-  }
-  
-  PrevPage():void {
-    if(this.pageNow-1==1) {
-      this.pageNow=this.pageNow-1;
-      this.getOrders(this.pageNow);
-      (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
-      (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
+  NextPage(): void {
+    if (Number(sessionStorage.getItem('maxPage')) == this.pageNow + 1) {
+      this.pageNow = this.pageNow + 1;
+      if (this.search == 0) {
+        this.getOrders(this.pageNow);
+      } else if (this.search == 1) {
+        this.getOrdersByClientName(this.pageNow, this.namefield);
+      } else if (this.search == 2) {
+        this.getOrdersByCarName(this.pageNow, this.namefield);
+      }
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = true;
+      (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = false;
+    } else if (Number(sessionStorage.getItem('maxPage')) != this.pageNow + 1) {
+      this.pageNow = this.pageNow + 1;
+      if (this.search == 0) {
+        this.getOrders(this.pageNow);
+      } else if (this.search == 1) {
+        this.getOrdersByClientName(this.pageNow, this.namefield);
+      } else if (this.search == 2) {
+        this.getOrdersByCarName(this.pageNow, this.namefield);
+      }
     }
   }
 
-  PageReset():void {
+  PrevPage(): void {
+    if (this.pageNow - 1 == 1) {
+      this.pageNow = this.pageNow - 1;
+      if (this.search == 0) {
+        this.getOrders(this.pageNow);
+      } else if (this.search == 1) {
+        this.getOrdersByClientName(this.pageNow, this.namefield);
+      } else if (this.search == 2) {
+        this.getOrdersByCarName(this.pageNow, this.namefield);
+      }
+      (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
+      (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
+    } else {
+      if (this.search == 0) {
+        this.getOrders(this.pageNow);
+      } else if (this.search == 1) {
+        this.getOrdersByClientName(this.pageNow, this.namefield);
+      } else if (this.search == 2) {
+        this.getOrdersByCarName(this.pageNow, this.namefield);
+      }
+    }
+  }
+
+  PageReset(): void {
     this.getOrders(1);
-    this.pageNow=1;
-    this.search=false;
-    (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
-    (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
+    this.pageNow = 1;
+    this.search = 0;
+    (<HTMLInputElement>document.getElementById("btnNextPage")).disabled = false;
+    (<HTMLInputElement>document.getElementById("btnPrevPage")).disabled = true;
   }
 
-  public onOpenModal(order:Order,mode:string):void {
+  public onOpenModal(order: Order, mode: string): void {
     const container = document.getElementById('container-buttons');
     const button = document.createElement('button');
     button.type = 'button';
     button.style.display = 'none';
-    button.setAttribute('data-toggle','modal');
-    if(mode === 'add') {
+    button.setAttribute('data-toggle', 'modal');
+    if (mode === 'add') {
       this.getOptionsCarByName("");
       this.getOptionsClientsByName("");
-      button.setAttribute('data-target','#addOrderModal');
+      button.setAttribute('data-target', '#addOrderModal');
     } else if (mode === 'edit') {
       this.getOptionsCarByName("");
       this.getOptionsClientsByName("");
       this.editOrder = order;
-      button.setAttribute('data-target','#editOrderModal');
+      button.setAttribute('data-target', '#editOrderModal');
     } else if (mode === 'delete') {
       this.deleteOrder = order;
-      button.setAttribute('data-target','#deleteOrderModal');
+      button.setAttribute('data-target', '#deleteOrderModal');
     }
     container.appendChild(button);
     button.click();
   }
 
-  public onAddOrder(addForm:NgForm):void {
+  public onAddOrder(addForm: NgForm): void {
     document.getElementById("close-form-order-add").click();
-    this.OrderService.addOrder(addForm.value).subscribe((resp:Order) => {
+    this.OrderService.addOrder(addForm.value).subscribe((resp: Order) => {
       this.PageReset();
     },
-    (error:HttpErrorResponse) => {
-      alert(error.message);
-    })
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      })
   }
 
-  public onUpdateOrder(editForm:NgForm):void {
+  public onUpdateOrder(editForm: NgForm): void {
     document.getElementById("close-form-order-edit").click();
-    editForm.setValue({orderId:this.editOrder.orderId,client:this.editOrder.client,car:editForm.value.car,status:editForm.value.status});
-    this.OrderService.updateOrder(editForm.value).subscribe((resp:Order) => {
+    editForm.setValue({ orderId: this.editOrder.orderId, client: this.editOrder.client, car: editForm.value.car, status: editForm.value.status });
+    this.OrderService.updateOrder(editForm.value).subscribe((resp: Order) => {
       this.PageReset();
     },
-    (error:HttpErrorResponse) => {
-      alert(error.message);
-    })
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      })
   }
 
-  public onDeleteOrder(orderId:number):void {
+  public onDeleteOrder(orderId: number): void {
     document.getElementById("close-form-order-delete").click();
-    this.OrderService.deleteOrder(orderId).subscribe((resp:void) => {
+    this.OrderService.deleteOrder(orderId).subscribe((resp: void) => {
       this.PageReset();
     },
-    (error:HttpErrorResponse) => {
-      alert(error.message);
-    })
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      })
   }
 }
