@@ -18,12 +18,24 @@ export class OrderService {
     return this.http.get<Order[]>(`${this.apiServerUrl}/order/p=${pageNumber}`);
   }
 
+  public getOrdersByClientName(pageNumber:number,name:string):Observable<Order[]> {
+    this.http.get<Order[]>(`${this.apiServerUrl}/order/clinm=${name}/p=${pageNumber}`,{observe: 'response'})
+    .subscribe(resp => this.headerSaver(resp));
+    return this.http.get<Order[]>(`${this.apiServerUrl}/order/clinm=${name}/p=${pageNumber}`);
+  }
+
+  public getOrdersByCarName(pageNumber:number,name:string):Observable<Order[]> {
+    this.http.get<Order[]>(`${this.apiServerUrl}/order/carnm=${name}/p=${pageNumber}`,{observe: 'response'})
+    .subscribe(resp => this.headerSaver(resp));
+    return this.http.get<Order[]>(`${this.apiServerUrl}/order/carnm=${name}/p=${pageNumber}`);
+  }
+
   public addOrder(order: Order): Observable<Order> {
     return this.http.post<Order>(`${this.apiServerUrl}/order`, order);
   }
 
   public updateOrder(order: Order): Observable<Order> {
-    return this.http.put<Order>(`${this.apiServerUrl}/order/update`, order);
+    return this.http.put<Order>(`${this.apiServerUrl}/order`, order);
   }
 
   public deleteOrder(orderID: number): Observable<void> {

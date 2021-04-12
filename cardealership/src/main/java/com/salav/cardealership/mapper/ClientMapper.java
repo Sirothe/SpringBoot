@@ -1,25 +1,31 @@
 package com.salav.cardealership.mapper;
 
 import com.salav.cardealership.model.Client;
-import com.salav.cardealership.model.DTO.ClientDTO;
+import com.salav.cardealership.model.dto.ClientDTO;
 import org.mapstruct.*;
 
 import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public abstract class ClientMapper {
+public interface ClientMapper {
     @Mapping(target = "id",source = "clientId")
-    public abstract ClientDTO toDto(Client client);
+    ClientDTO toDto(Client client);
     @InheritInverseConfiguration(name = "toDto")
-    public abstract Client fromDto(ClientDTO dto);
+    Client fromDto(ClientDTO dto);
 
-    public abstract List<ClientDTO> toClientDto(Collection<Client> clients);
+    List<ClientDTO> toClientDto(Collection<Client> clients);
     @InheritInverseConfiguration(name = "toClientDto")
-    public abstract List<Client> fromClientDto(Collection<ClientDTO> clientsDto);
+    List<Client> fromClientDto(Collection<ClientDTO> clientsDto);
 
     @AfterMapping
-    void setFullName(@MappingTarget ClientDTO clientDTO,Client client) {
-        clientDTO.setFullName(client.getName()+" "+client.getSurname());
+    default void setFullName(@MappingTarget ClientDTO clientDTO, Client client) {
+        clientDTO.setFullName(client.getSurname()+" "+client.getName());
+    }
+    @BeforeMapping
+    default void setNameAndSurname(@MappingTarget Client client, ClientDTO clientDTO) {
+        String[] temp = clientDTO.getFullName().split(" ");
+        client.setSurname(temp[0]);
+        client.setName(temp[1]);
     }
 }

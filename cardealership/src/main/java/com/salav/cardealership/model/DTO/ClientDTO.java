@@ -1,10 +1,13 @@
-package com.salav.cardealership.model.DTO;
+package com.salav.cardealership.model.dto;
 
 public class ClientDTO {
-    public Long id;
-    public String fullName;
-    public String email;
-    public String number;
+    private Long id;
+    private String fullName;
+    private String email;
+    private String number;
+
+    public ClientDTO() {
+    }
 
     public ClientDTO(String fullName, String email, String number) {
         this.fullName = fullName;

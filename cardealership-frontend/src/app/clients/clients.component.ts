@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Client } from '../model/client';
 import { ClientService } from '../_service/client.service';
 
@@ -11,6 +12,10 @@ import { ClientService } from '../_service/client.service';
 export class ClientsComponent implements OnInit {
   public clients:Client[];
   public pageNow:number;
+  public namefield:string;
+  public search:boolean;
+  public editClient:Client;
+  public deleteClient:Client;
 
   constructor(private ClientService:ClientService) { }
 
@@ -30,6 +35,30 @@ export class ClientsComponent implements OnInit {
     )
   }
 
+  public getClientsByName(page:number,name:string):void {
+    this.ClientService.getClientsByName(page,name).subscribe(
+      (response: Client[]) => {
+        this.clients=response;
+      },
+      (error:HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
+
+  searchCheck():void {
+    this.namefield = (<HTMLInputElement>document.getElementById("inSearch")).value;
+    if(this.namefield!="") {
+      this.search=false;
+      this.pageNow=1;
+      this.getClientsByName(this.pageNow,this.namefield);
+    } else {
+      this.search=true;
+      this.pageNow=1;
+      this.getClients(this.pageNow);
+    }
+  }
+
   NextPage():void {
     if(sessionStorage.getItem('maxPage')==String(this.pageNow+1)) {
       this.pageNow=this.pageNow+1;
@@ -46,5 +75,65 @@ export class ClientsComponent implements OnInit {
       (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
       (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
     }
+  }
+
+  PageReset():void {
+    this.getClients(1);
+    this.pageNow=1;
+    this.search=false;
+    (<HTMLInputElement> document.getElementById("btnNextPage")).disabled = false;
+    (<HTMLInputElement> document.getElementById("btnPrevPage")).disabled = true;
+  }
+
+  public onOpenModal(client:Client,mode:string):void {
+    const container = document.getElementById('container-buttons');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle','modal');
+    if(mode === 'add') {
+      button.setAttribute('data-target','#addClientModal');
+    } else if (mode === 'edit') {
+      this.editClient = client;
+      button.setAttribute('data-target','#editClientModal');
+    } else if (mode === 'delete') {
+      this.deleteClient = client;
+      button.setAttribute('data-target','#deleteClientModal');
+    }
+    container.appendChild(button);
+    button.click();
+  }
+
+  public onAddClient(addForm:NgForm):void {
+    document.getElementById("close-form-client-add").click();
+    console.log(addForm.value);
+    this.ClientService.addClient(addForm.value).subscribe(
+      (resp:Client) => {
+        this.PageReset();
+      },
+      (error:HttpErrorResponse) => {
+        alert(error.message);
+      }
+    )
+  }
+  
+  public onUpdateClient(client:Client):void {
+    document.getElementById("close-form-client-edit").click();
+    this.ClientService.updateClient(client).subscribe((resp:Client) => {
+      this.PageReset();
+    },
+    (error:HttpErrorResponse) => {
+      alert(error.message);
+    })
+  }
+
+  public onDeleteClient(clientId:number):void {
+    document.getElementById("close-form-client-delete").click();
+    this.ClientService.deleteClient(clientId).subscribe((resp:void) => {
+      this.PageReset();
+    },
+    (error:HttpErrorResponse) => {
+      alert(error.message);
+    })
   }
 }

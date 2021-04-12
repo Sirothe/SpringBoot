@@ -2,7 +2,7 @@ package com.salav.cardealership.controller;
 
 import com.salav.cardealership.mapper.ClientMapper;
 import com.salav.cardealership.model.Client;
-import com.salav.cardealership.model.DTO.ClientDTO;
+import com.salav.cardealership.model.dto.ClientDTO;
 import com.salav.cardealership.service.ClientService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -44,7 +44,7 @@ public class ClientController {
         return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
-    @GetMapping("/name={name}/p={pageNumber}")
+    @GetMapping("/nm={name}/p={pageNumber}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ClientDTO>> findPaginatedClientsByName(@PathVariable (value = "pageNumber") int pageN,@PathVariable (value = "name") String name) {
         int pageS=5;
@@ -56,18 +56,27 @@ public class ClientController {
         return new ResponseEntity<>(listClients,headers,HttpStatus.OK);
     }
 
-    @PostMapping()
+    @GetMapping("/nm={name}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ClientDTO> addClient(@RequestBody Client client) {
-        ClientDTO newClient = clientMapper.toDto(clientService.addClient(client));
-        return new ResponseEntity<>(newClient, HttpStatus.CREATED);
+    public ResponseEntity<List<ClientDTO>> findAllClientsByName(@PathVariable (value = "name") String name) {
+        List<ClientDTO> listClients = clientMapper.toClientDto(clientService.findAllByName(name));
+        return new ResponseEntity<>(listClients,HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ClientDTO> updateClient(@RequestBody Client client) {
-        ClientDTO newClient = clientMapper.toDto(clientService.updateClient(client));
-        return new ResponseEntity<>(newClient,HttpStatus.OK);
+    public ResponseEntity<ClientDTO> addClient(@RequestBody ClientDTO client) {
+        Client newClient = clientMapper.fromDto(client);
+        clientService.addClient(newClient);
+        return new ResponseEntity<>(client, HttpStatus.CREATED);
+    }
+
+    @PutMapping()
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ClientDTO> updateClient(@RequestBody ClientDTO client) {
+        Client newClient = clientMapper.fromDto(client);
+        clientService.updateClient(newClient);
+        return new ResponseEntity<>(client,HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
-    Page<Order> findAllByClientName(String name, Pageable pageable);
+    Page<Order> findAllByClientNameContains(String name, Pageable pageable);
 
-    Page<Order> findAllByCarName(String name, Pageable pageable);
+    Page<Order> findAllByCarNameContains(String name, Pageable pageable);
 }

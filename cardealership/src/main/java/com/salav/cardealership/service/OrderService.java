@@ -37,12 +37,12 @@ public class OrderService {
 
     public Page<Order> findPaginatedOrdersByClientName(String name, int pageN, int pageS) {
         Pageable pageable = PageRequest.of(pageN - 1, pageS);
-        return orderRepo.findAllByClientName(name, pageable);
+        return orderRepo.findAllByClientNameContains(name, pageable);
     }
 
     public Page<Order> findPaginatedOrdersByCarName(String name, int pageN, int pageS) {
         Pageable pageable = PageRequest.of(pageN - 1, pageS);
-        return orderRepo.findAllByCarName(name, pageable);
+        return orderRepo.findAllByCarNameContains(name, pageable);
     }
 
     public void deleteOrder(Long id) {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +23,17 @@ public class CarService {
 
     public Page<Car> findPaginatedCars(int pageN, int pageS) {
         Pageable pageable = PageRequest.of(pageN-1,pageS);
-        return this.carRepo.findAll(pageable);
+        return carRepo.findAll(pageable);
     }
 
     public Car addCar(Car car) {
+        car.setName(car.getName().substring(0,1).toUpperCase() + car.getName().substring(1));
+        car.setModel(car.getModel().substring(0,1).toUpperCase() + car.getModel().substring(1));
         return carRepo.save(car);
+    }
+
+    public List<Car> findAllByName(String name) {
+        return carRepo.findAllByNameContains(name, Sort.by("name"));
     }
 
     public Car updateCar(Car car) {

@@ -1,7 +1,7 @@
 package com.salav.cardealership.controller;
 
 import com.salav.cardealership.mapper.OrderMapper;
-import com.salav.cardealership.model.DTO.OrderDTO;
+import com.salav.cardealership.model.dto.OrderDTO;
 import com.salav.cardealership.model.Order;
 import com.salav.cardealership.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,8 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper orderMapper;
+    private static final String PAGEMAX= "pageMax";
+    private static final String TOTALITEMS = "TotalItems";
 
     @Autowired
     public OrderController(OrderService orderService, OrderMapper orderMapper) {
@@ -33,8 +35,8 @@ public class OrderController {
         int pageS=5;
         Page<Order> page = orderService.findPaginatedOrders(pageN,pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageMax",String.valueOf(page.getTotalPages()));
-        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        headers.add(PAGEMAX,String.valueOf(page.getTotalPages()));
+        headers.add(TOTALITEMS,String.valueOf(page.getTotalElements()));
         List<OrderDTO> listOrders = orderMapper.toDtoList(page.getContent());
         return new ResponseEntity<>(listOrders,headers,HttpStatus.OK);
     }
@@ -46,42 +48,44 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
-    @GetMapping("/cliname=?{name}/p={pageNumber}")
+    @GetMapping("/clinm={name}/p={pageNumber}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OrderDTO>> findPaginatedOrdersByClientName(@PathVariable (value = "pageNumber") int pageN,@PathVariable (value = "name") String name) {
         int pageS=5;
-        Page<Order> page = orderService.findPaginatedOrdersByClientName(name, pageN-1,pageS);
+        Page<Order> page = orderService.findPaginatedOrdersByClientName(name, pageN,pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageMax",String.valueOf(page.getTotalPages()));
-        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        headers.add(PAGEMAX,String.valueOf(page.getTotalPages()));
+        headers.add(TOTALITEMS,String.valueOf(page.getTotalElements()));
         List<OrderDTO> listOrders = orderMapper.toDtoList(page.getContent());
         return new ResponseEntity<>(listOrders,headers,HttpStatus.OK);
     }
 
-    @GetMapping("/caname=?{name}/p={pageNumber}")
+    @GetMapping("/carnm={name}/p={pageNumber}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OrderDTO>> findPaginatedOrdersByCarName(@PathVariable (value = "pageNumber") int pageN,@PathVariable (value = "name") String name) {
         int pageS=5;
-        Page<Order> page = orderService.findPaginatedOrdersByCarName(name, pageN-1,pageS);
+        Page<Order> page = orderService.findPaginatedOrdersByCarName(name, pageN,pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageMax",String.valueOf(page.getTotalPages()));
-        headers.add("TotalItems",String.valueOf(page.getTotalElements()));
+        headers.add(PAGEMAX,String.valueOf(page.getTotalPages()));
+        headers.add(TOTALITEMS,String.valueOf(page.getTotalElements()));
         List<OrderDTO> listOrders = orderMapper.toDtoList(page.getContent());
         return new ResponseEntity<>(listOrders,headers,HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderDTO> addOrder(@RequestBody Order order) {
-        OrderDTO newOrder = orderMapper.toDto(orderService.addOrder(order));
-        return new ResponseEntity<>(newOrder, HttpStatus.CREATED);
+    public ResponseEntity<OrderDTO> addOrder(@RequestBody OrderDTO order) {
+        Order newOrder = orderMapper.fromDto(order);
+        orderService.updateOrder(newOrder);
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
     @PutMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderDTO> updateOrder(@RequestBody Order order) {
-        OrderDTO newOrder = orderMapper.toDto(orderService.updateOrder(order));
-        return new ResponseEntity<>(newOrder,HttpStatus.OK);
+    public ResponseEntity<OrderDTO> updateOrder(@RequestBody OrderDTO order) {
+        Order newOrder = orderMapper.fromDto(order);
+        orderService.updateOrder(newOrder);
+        return new ResponseEntity<>(order,HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

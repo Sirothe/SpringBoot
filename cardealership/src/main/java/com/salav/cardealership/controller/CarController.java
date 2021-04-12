@@ -41,7 +41,7 @@ public class CarController {
     }
 
     @GetMapping("/nm={name}/p={pageNumber}")
-    public ResponseEntity<List<Car>> findPaginatedCarsByName(@RequestParam int pageN, @RequestParam String name) {
+    public ResponseEntity<List<Car>> findPaginatedCarsByName(@PathVariable (value = "pageNumber") int pageN, @PathVariable (value = "name") String name) {
         int pageS = 5;
         Page<Car> page = carService.findPaginatedCarsByName(pageN, pageS, name);
         HttpHeaders headers = new HttpHeaders();
@@ -51,7 +51,14 @@ public class CarController {
         return new ResponseEntity<>(listCars, headers, HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @GetMapping("/nm={name}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Car>> findAllCarsByName(@PathVariable (value = "name") String name) {
+        List<Car> listCars = carService.findAllByName(name);
+        return new ResponseEntity<>(listCars,HttpStatus.OK);
+    }
+
+    @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Car> addCar(@RequestBody Car car) {
         Car newCar = carService.addCar(car);

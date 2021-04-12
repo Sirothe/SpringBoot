@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  title = 'cardealership-frontend';
+  public username:string;
 
   ngOnInit(): void {
     sessionStorage.setItem('token',"");
@@ -25,6 +25,7 @@ export class AppComponent implements OnInit{
     if(sessionStorage.getItem('token') === "") {
       return false;
     } else {
+      this.username=sessionStorage.getItem('username');
       return true;
     }
   }

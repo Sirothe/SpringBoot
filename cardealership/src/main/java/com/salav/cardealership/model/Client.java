@@ -64,4 +64,14 @@ public class Client {
         this.number = number;
     }
 
+    @Override
+    public String toString() {
+        return "Client{" +
+                "clientId=" + clientId +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", number='" + number + '\'' +
+                '}';
+    }
 }

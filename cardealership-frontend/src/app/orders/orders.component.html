@@ -1,51 +1,168 @@
-<!-- Button for add -->
-<button type="button" class="btn btn-primary">
-  <i class="fas fa-plus"></i> Add Order
-</button>
-<button type="button" disabled id="btnPrevPage" class="btn btn-primary" (click)="PrevPage()">
-  <i class="fas fa-plus"></i> Prev Page
-</button>
-<button type="button" id="btnNextPage" class="btn btn-primary" (click)="NextPage()">
-  <i class="fas fa-plus"></i> Next Page
-</button>
+<!-- Buttons -->
+<div>
+  <button type="button" class="btn btn-primary" (click)="onOpenModal(null,'add')">
+    <i class="fas fa-plus"></i> Add Order
+  </button>
+
+  <!-- SEARCH input and button -->
+  <button type="button" id="btnSearch" class="btn btn-secondary" (click)="searchCheckClientName()">
+    <i class="fas fa-plus"></i> Search Client
+  </button>
+  <button type="button" id="btnSearch" class="btn btn-secondary" (click)="searchCheckCarName()">
+    <i class="fas fa-plus"></i> Search Car
+  </button>
+  <input type="text" autocomplete="off" id="inSearch" placeholder="Name...">
+</div>
+
+<div class="container" id="order-container"></div>
+
 
 <!-- table for data -->
 <table class="table table-dark">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Car name</th>
-        <th scope="col">Car model</th>
-        <th scope="col">Cli ID</th>
-        <th scope="col">Cli name</th>
-        <th scope="col">Cli number</th>
-        <th scope="col">status</th>
-        <th scope="col" style="width: 140px;">Action Button</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let order of orders">
-        <td>{{order.orderId}}</td>
-        <td>{{order.car.name}}</td>
-        <td>{{order.car.model}}</td>
-        <td>{{order.client.id}}</td>
-        <td>{{order.client.fullName}}</td>
-        <td>{{order.client.number}}</td>
-        <td>{{order.status}}</td>
-        <td>
-          <a class="table-link  text-info">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Car model</th>
+      <th scope="col">Car name</th>
+      <th scope="col">Cli ID</th>
+      <th scope="col">Cli name</th>
+      <th scope="col">Cli number</th>
+      <th scope="col">status</th>
+      <th scope="col" style="width: 140px;">Action Button</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of orders">
+      <td>{{order?.orderId}}</td>
+      <td>{{order?.car.model}}</td>
+      <td>{{order?.car.name}}</td>
+      <td>{{order?.client.id}}</td>
+      <td>{{order?.client.fullName}}</td>
+      <td>{{order?.client.number}}</td>
+      <td>{{order?.status}}</td>
+      <td>
+        <a class="table-link  text-info" (click)="onOpenModal(order,'edit')">
           <span class="fa-stack">
-              <i class="fa fa-square fa-stack-2x"></i>
-              <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+            <i class="fa fa-square fa-stack-2x"></i>
+            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
           </span>
-          </a>
-          <a class="table-link  text-danger">
+        </a>
+        <a class="table-link  text-danger" (click)="onOpenModal(order,'delete')">
           <span class="fa-stack">
-              <i class="fa fa-square fa-stack-2x"></i>
-              <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
+            <i class="fa fa-square fa-stack-2x"></i>
+            <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
           </span>
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- FOR TS buttons -->
+<div class="container" id="container-buttons">
+</div>
+
+<!-- ADD Modal -->
+<div class="modal fade" id="addOrderModal" tabindex="-1" role="dialog" aria-labelledby="addOrderModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addOrderModalLabel">Add Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addFormOrder="ngForm">
+          <div class="form-group">
+            <label for="order-client-add" class="col-form-label">Client Details:</label>
+            <select (ngModel)="client" name="client" required>
+              <option *ngFor="let client of optionClients" [ngValue]="client">{{client?.fullName}} {{client?.number}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="order-car-add" class="col-form-label">Car Details:</label>
+            <select (ngModel)="car" name="car" required>
+              <option *ngFor="let car of optionCars" [ngValue]="car">{{car?.model}} {{car?.name}} --- {{car?.price}}$</option>
+            </select>
+          </div>
+          <input type="text" hidden ngModel="active" name="status" class="form-control" id="order-status-add">
+          <div class="modal-footer">
+            <button type="button" id="close-form-order-add" class="btn btn-dark" data-dismiss="modal">Close</button>
+            <button type="submit" [disabled]="addFormOrder.invalid" (click)="onAddOrder(addFormOrder)" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT Modal -->
+<div class="modal fade" id="editOrderModal" tabindex="-1" role="dialog" aria-labelledby="editOrderModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editOrderModalLabel">Edit Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editFormOrder="ngForm">
+          <input type="number" hidden ngModel="" name="orderId" class="form-control" id="order-id-edit">
+          <div class="form-group">
+            <label class="col-form-label">Client Details : {{editOrder?.client.fullName}} {{editOrder?.client.number}}</label>
+            <input type="text" hidden ngModel name="client" class="form-control" id="order-client-edit">
+          </div>
+          <div class="form-group">
+            <label for="order-car-edit" class="col-form-label">Car Details:</label>
+            <select (ngModel)="car" name="car" required>
+              <option *ngFor="let car of optionCars" [ngValue]="car">{{car?.model}} {{car?.name}} --- {{car?.price}}$</option>
+            </select>
+            <label class="col-form-label">Previous : {{editOrder?.car.model}} {{editOrder?.car.name}} --- {{editOrder?.car.price}}$</label>
+          </div>
+          <input type="text" hidden ngModel="active" name="status" class="form-control" id="order-status-edit">
+          <div class="modal-footer">
+            <button type="button" id="close-form-order-edit" class="btn btn-dark" data-dismiss="modal">Close</button>
+            <button type="submit" [disabled]="editFormOrder.invalid" (click)="onUpdateOrder(editFormOrder)" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE Modal -->
+<div class="modal fade" id="deleteOrderModal" tabindex="-1" role="dialog" aria-labelledby="deleteOrderModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteOrderModalLabel">Delete Order</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">Are you sure you want to delete Order - {{deleteOrder?.orderId}} ?</p>
+        <p class="modal-text">Client : {{deleteOrder?.client.fullName}}</p>
+        <p class="modal-text">Car : {{deleteOrder?.car.model}} {{deleteOrder?.car.name}} --- {{deleteOrder?.car.price}}$</p>
+          <div class="modal-footer">
+            <button type="button" id="close-form-order-delete" class="btn btn-dark" data-dismiss="modal">No</button>
+            <button (click)="onDeleteOrder(deleteOrder?.orderId)" class="btn btn-danger">Yes</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="centered-buttons">
+  <button type="button" disabled id="btnPrevPage" class="btn btn-primary" (click)="PrevPage()">
+    <i class="fas fa-angle-double-left"></i> Prev Page
+  </button>
+  <button type="button" id="btnNextPage" class="btn btn-primary" (click)="NextPage()">
+    Next Page <i class="fas fa-angle-double-right"></i>
+  </button>
+</div>

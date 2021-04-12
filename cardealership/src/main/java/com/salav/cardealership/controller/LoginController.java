@@ -12,5 +12,6 @@ public class LoginController {
 
     @PostMapping("/login")
     public void login(@RequestBody LoginCredentials credentials) {
+        //method to login
     }
 }

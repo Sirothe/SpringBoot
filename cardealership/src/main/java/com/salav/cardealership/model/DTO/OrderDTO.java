@@ -1,4 +1,4 @@
-package com.salav.cardealership.model.DTO;
+package com.salav.cardealership.model.dto;
 
 import com.salav.cardealership.model.Car;
 
@@ -7,6 +7,9 @@ public class OrderDTO {
     private Car car;
     private ClientDTO client;
     private String status;
+
+    public OrderDTO() {
+    }
 
     public OrderDTO(Car car, ClientDTO client, String status) {
         this.car = car;

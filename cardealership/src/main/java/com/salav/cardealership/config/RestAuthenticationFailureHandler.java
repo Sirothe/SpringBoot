@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 public class RestAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        super.onAuthenticationFailure(request,response,exception);
+    public final void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        super.onAuthenticationFailure(request, response, exception);
     }
 }

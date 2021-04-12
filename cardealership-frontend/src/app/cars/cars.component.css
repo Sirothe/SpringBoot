@@ -1,12 +1,4 @@
-.product-rating {
-    line-height: 22px;
-}
-.product-rating i {
-    color: #fc0;
-    display: inline-block;
-    margin-right: 2px;
-    font-size: 14px;
-}
+
 @media screen and (max-width: 1199px) {
     .product-rating {
         margin-bottom: 5px;
@@ -19,10 +11,10 @@
     }
 }
 .text-secondary {
-    color: #000000 !important;
+    color: whitesmoke !important;
 }
 .text-after {
-    color: #000000 !important;
+    color: whitesmoke !important;
 }
 .card-wrapper {
     margin-top:20px;
@@ -103,6 +95,15 @@
     margin-left: 10px;
 }
 .btn-secondary {
+    float: right;
+    background-color: rgb(0, 123, 255);
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.btn-dark {
+    float: right;
+    background-color: rgb(1, 6, 12);
     margin-top: 10px;
     margin-left: 10px;
 }
@@ -115,4 +116,24 @@
 }
 .col-form-label {
     color: black;
+}
+input[type=text] {
+    height: 38px;
+    width: 120px;
+    margin-left: 11px;
+    margin-top: 10px;
+    float: right;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.modal-text {
+    color: black;
+}
+input:invalid {
+    border: rgb(255, 0, 0) solid 1px;
+  }
+.centered-buttons {
+    display: flex;
+    justify-content: center;
 }

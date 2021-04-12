@@ -18,12 +18,22 @@ export class ClientService {
     return this.http.get<Client[]>(`${this.apiServerUrl}/client/p=${pageNumber}`);
   }
 
+  public getClientsByName(pageNumber:number,name:string): Observable<Client[]> {
+    this.http.get<Client[]>(`${this.apiServerUrl}/client/nm=${name}/p=${pageNumber}`,{observe: 'response'})
+    .subscribe(resp => this.headerSaver(resp));
+    return this.http.get<Client[]>(`${this.apiServerUrl}/client/nm=${name}/p=${pageNumber}`);
+  }
+
+  public getAllClientsByName(name:string):Observable<Client[]> {
+    return this.http.get<Client[]>(`${this.apiServerUrl}/client/nm=${name}`);
+  }
+
   public addClient(client: Client): Observable<Client> {
     return this.http.post<Client>(`${this.apiServerUrl}/client`, client);
   }
 
   public updateClient(client: Client): Observable<Client> {
-    return this.http.put<Client>(`${this.apiServerUrl}/client/update`, client);
+    return this.http.put<Client>(`${this.apiServerUrl}/client`, client);
   }
 
   public deleteClient(clientID: number): Observable<void> {

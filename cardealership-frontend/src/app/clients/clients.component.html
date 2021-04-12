@@ -1,45 +1,151 @@
-<!-- Button for add -->
-<button type="button" class="btn btn-primary">
-  <i class="fas fa-plus"></i> Add Client
-</button>
-<button type="button" disabled id="btnPrevPage" class="btn btn-primary" (click)="PrevPage()">
-  <i class="fas fa-plus"></i> Prev Page
-</button>
-<button type="button" id="btnNextPage" class="btn btn-primary" (click)="NextPage()">
-  <i class="fas fa-plus"></i> Next Page
-</button>
+<!-- Buttons -->
+  <button type="button" class="btn btn-primary" (click)="onOpenModal(null,'add')">
+    <i class="fas fa-plus"></i> Add Client
+  </button>
+
+  <!-- SEARCH input and button -->
+  <button type="button" id="btnSearch" class="btn btn-secondary" (click)="searchCheck()">
+    <i class="fas fa-plus"></i> Search
+  </button>
+  <input class="input-search" type="text" autocomplete="off" id="inSearch" placeholder="Name...">
+
+<!-- FOR TS buttons -->
+<div class="container" id="container-buttons">
+</div>
+
+<!-- ADD Modal -->
+<div class="modal fade" id="addClientModal" tabindex="-1" role="dialog" aria-labelledby="addClientModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addClientModalLabel">Add Client</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addFormClient="ngForm">
+          <div class="form-group">
+            <label for="car-model-add" class="col-form-label">Surname and Name:</label>
+            <input type="text" autocomplete="off" ngModel required name="fullName" class="form-control" id="client-fullName-add">
+          </div>
+          <div class="form-group">
+            <label for="car-name-add" class="col-form-label">Email:</label>
+            <input type="text" autocomplete="off" ngModel required name="email" class="form-control" id="client-email-add">
+          </div>
+          <div class="form-group">
+            <label for="car-price-add" class="col-form-label">Number:</label>
+            <input type="text" autocomplete="off" ngModel required name="number" class="form-control" id="client-number-add">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="close-form-client-add" class="btn btn-dark" data-dismiss="modal">Close</button>
+            <button type="submit" [disabled]="addFormClient.invalid" (click)="onAddClient(addFormClient)" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT Modal -->
+<div class="modal fade" id="editClientModal" tabindex="-1" role="dialog" aria-labelledby="editClientModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editClientModalLabel">Edit Client</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #editFormClient="ngForm">
+          <input type="hidden" ngModel="{{editClient?.id}}" name="id" class="form-control" id="car-id-edit">
+          <div class="form-group">
+            <label for="client-fullName-edit" class="col-form-label">Name and Surname:</label>
+            <input type="text" autocomplete="off" ngModel="{{editClient?.fullName}}" required name="fullName" class="form-control" id="client-fullName-edit">
+          </div>
+          <div class="form-group">
+            <label for="client-email-edit" class="col-form-label">Email:</label>
+            <input type="text" autocomplete="off" ngModel="{{editClient?.email}}" required name="email" class="form-control" id="client-email-edit">
+          </div>
+          <div class="form-group">
+            <label for="client-number-edit" class="col-form-label">Number:</label>
+            <input type="text" autocomplete="off" ngModel="{{editClient?.number}}" required name="number" class="form-control" id="client-number-edit">
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="close-form-client-edit" class="btn btn-dark" data-dismiss="modal">Close</button>
+            <button type="submit" [disabled]="editFormClient.invalid" (click)="onUpdateClient(editFormClient.value)" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE Modal -->
+<div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="deleteClientModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteClientModalLabel">Delete Client</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">Are you sure you want to delete Car - {{deleteClient?.fullName}} ?</p>
+          <div class="modal-footer">
+            <button type="button" id="close-form-client-delete" class="btn btn-dark" data-dismiss="modal">No</button>
+            <button (click)="onDeleteClient(deleteClient?.id)" class="btn btn-danger">Yes</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- table for data -->
 <table class="table table-dark">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Full Name</th>
-        <th scope="col">email</th>
-        <th scope="col">number</th>
-        <th scope="col" style="width: 140px;">A button</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let client of clients">
-        <td>{{client.id}}</td>
-        <td>{{client.fullName}}</td>
-        <td>{{client.email}}</td>
-        <td>{{client.number}}</td>
-        <td>
-          <a class="table-link  text-info">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Full Name</th>
+      <th scope="col">email</th>
+      <th scope="col">number</th>
+      <th scope="col" style="width: 140px;">A button</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let client of clients">
+      <td>{{client.id}}</td>
+      <td>{{client.fullName}}</td>
+      <td>{{client.email}}</td>
+      <td>{{client.number}}</td>
+      <td>
+        <a class="table-link  text-info" (click)="onOpenModal(client,'edit')">
           <span class="fa-stack">
-              <i class="fa fa-square fa-stack-2x"></i>
-              <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+            <i class="fa fa-square fa-stack-2x"></i>
+            <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
           </span>
-          </a>
-          <a class="table-link  text-danger">
+        </a>
+        <a class="table-link  text-danger" (click)="onOpenModal(client,'delete')">
           <span class="fa-stack">
-              <i class="fa fa-square fa-stack-2x"></i>
-              <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
+            <i class="fa fa-square fa-stack-2x"></i>
+            <i class="fa fa-trash fa-stack-1x fa-inverse"></i>
           </span>
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="centered-buttons">
+  <button type="button" disabled id="btnPrevPage" class="btn btn-primary" (click)="PrevPage()">
+    <i class="fas fa-angle-double-left"></i> Prev Page
+  </button>
+  <button type="button" id="btnNextPage" class="btn btn-primary" (click)="NextPage()">
+    Next Page <i class="fas fa-angle-double-right"></i>
+  </button>
+</div>

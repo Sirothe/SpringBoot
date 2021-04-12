@@ -18,12 +18,22 @@ export class CarService {
     return this.http.get<Car[]>(`${this.apiServerUrl}/car/p=${pageNumber}`);
   }
 
+  public getCarsbyName(pageNumber:number,name:string):Observable<Car[]> {
+    this.http.get(`${this.apiServerUrl}/car/nm=${name}/p=${pageNumber}`,{observe: 'response'})
+    .subscribe(resp => this.headerSaver(resp))
+    return this.http.get<Car[]>(`${this.apiServerUrl}/car/nm=${name}/p=${pageNumber}`);
+  }
+
+  public getAllCarsByName(name:string):Observable<Car[]> {
+     return this.http.get<Car[]>(`${this.apiServerUrl}/car/nm=${name}`);
+  }
+
   public addCar(car: Car): Observable<Car> {
     return this.http.post<Car>(`${this.apiServerUrl}/car`, car);
   }
 
   public updateCar(car: Car): Observable<Car> {
-    return this.http.put<Car>(`${this.apiServerUrl}/car/update`, car);
+    return this.http.put<Car>(`${this.apiServerUrl}/car`, car);
   }
 
   public deleteCar(carID: number): Observable<void> {

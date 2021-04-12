@@ -1,23 +1,19 @@
 package com.salav.cardealership.model;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
 
 @Entity
-@Table(name="orders")
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false, updatable = false)
     private Long orderId;
-    @NotNull
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "car_id", referencedColumnName = "car_id")
+    @JoinColumn(name = "car_id", referencedColumnName = "car_id", nullable = false)
     private Car car;
-    @NotNull
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "client_id", referencedColumnName = "client_id")
+    @JoinColumn(name = "client_id", referencedColumnName = "client_id", nullable = false)
     private Client client;
     private String status;
 
