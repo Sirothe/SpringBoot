@@ -2,6 +2,7 @@ package com.salav.cardealership.config;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +18,13 @@ import java.util.Date;
 @Component
 public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private final long expirationTime;
-    private final String secret;
+    @Autowired
+    VaultJwtPropertiesConfig vaultJwtPropertiesConfig;
 
-    public RestAuthenticationSuccessHandler(@Value("${jwt.expirationTime}") long expirationTime,@Value("${jwt.secret}") String secret) {
+    private final long expirationTime;
+
+    public RestAuthenticationSuccessHandler(@Value("${jwt.expirationTime}") long expirationTime) {
         this.expirationTime = expirationTime;
-        this.secret = secret;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         String token = JWT.create()
                 .withSubject(principal.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis()+ expirationTime))
-                .sign(Algorithm.HMAC256(secret));
+                .sign(Algorithm.HMAC256(vaultJwtPropertiesConfig.getSecret()));
         response.addHeader("Authorization","Bearer "+ token);
         response.addHeader("Username", principal.getUsername());
         response.addHeader("Roles",principal.getAuthorities().toString());

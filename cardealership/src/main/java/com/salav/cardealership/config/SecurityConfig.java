@@ -1,6 +1,7 @@
 package com.salav.cardealership.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,14 +30,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final ObjectMapper objectMapper;
     private final RestAuthenticationSuccessHandler successHandler;
     private final RestAuthenticationFailureHandler failureHandler;
-    private final String secret;
 
-    public SecurityConfig(DataSource datasource, ObjectMapper objectMapper, RestAuthenticationSuccessHandler successHandler, RestAuthenticationFailureHandler failureHandler,@Value("${jwt.secret}") String secret) {
+    @Autowired
+    VaultJwtPropertiesConfig vaultJwtPropertiesConfig;
+
+    public SecurityConfig(DataSource datasource, ObjectMapper objectMapper, RestAuthenticationSuccessHandler successHandler, RestAuthenticationFailureHandler failureHandler) {
         this.datasource = datasource;
         this.objectMapper = objectMapper;
         this.successHandler = successHandler;
         this.failureHandler = failureHandler;
-        this.secret = secret;
     }
 
     @Override
@@ -61,12 +63,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers(HttpMethod.GET,"/car/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/dupa").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(authenticationFilter())
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userDetailsService(),secret))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userDetailsService(),vaultJwtPropertiesConfig.getSecret()))
                 .logout().permitAll()
                 .and()
                 .exceptionHandling()

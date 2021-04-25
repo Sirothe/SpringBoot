@@ -41,7 +41,7 @@ public class CarService {
     }
 
     public Car findCarById(Long id) {
-        return carRepo.findById(id).orElseThrow(() -> new ElementNotFoundException("Car by id"+ id + "was not found"));
+        return carRepo.findById(id).orElseThrow(() -> new ElementNotFoundException("Car by id "+ id + " was not found"));
     }
 
     public Page<Car> findPaginatedCarsByName(int pageN,int pageS,String name) {
