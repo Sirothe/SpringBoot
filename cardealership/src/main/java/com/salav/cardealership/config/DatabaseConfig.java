@@ -1,5 +1,6 @@
 package com.salav.cardealership.config;
 
+import com.salav.cardealership.config.vault.VaultDatabasePropertiesConfig;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,12 +30,12 @@ public class DatabaseConfig {
     public VaultDatabasePropertiesConfig vaultPropertiesConfig(VaultTemplate vaultTemplate) {
         VaultDatabasePropertiesConfig config = new VaultDatabasePropertiesConfig();
         VaultResponse response = vaultTemplate.read("/secret/data/properties");
-            Map<String, Object> vaultPropertiesConfig = response.getData();
-            if(vaultPropertiesConfig!=null) {
-                LinkedHashMap<String,String> vaultConfig = (LinkedHashMap<String, String>) vaultPropertiesConfig.get("data");
-                config.setPassword(vaultConfig.get("password"));
-                config.setUsername(vaultConfig.get("username"));
-            }
+        Map<String, Object> vaultPropertiesConfig = response.getData();
+        if (vaultPropertiesConfig != null) {
+            LinkedHashMap<String, String> vaultConfig = (LinkedHashMap<String, String>) vaultPropertiesConfig.get("data");
+            config.setPassword(vaultConfig.get("password"));
+            config.setUsername(vaultConfig.get("username"));
+        }
         return config;
     }
 }

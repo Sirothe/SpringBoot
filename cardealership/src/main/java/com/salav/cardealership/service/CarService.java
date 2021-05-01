@@ -22,13 +22,13 @@ public class CarService {
     }
 
     public Page<Car> findPaginatedCars(int pageN, int pageS) {
-        Pageable pageable = PageRequest.of(pageN-1,pageS);
+        Pageable pageable = PageRequest.of(pageN - 1, pageS);
         return carRepo.findAll(pageable);
     }
 
     public Car addCar(Car car) {
-        car.setName(car.getName().substring(0,1).toUpperCase() + car.getName().substring(1));
-        car.setModel(car.getModel().substring(0,1).toUpperCase() + car.getModel().substring(1));
+        car.setName(car.getName().substring(0, 1).toUpperCase() + car.getName().substring(1));
+        car.setModel(car.getModel().substring(0, 1).toUpperCase() + car.getModel().substring(1));
         return carRepo.save(car);
     }
 
@@ -41,12 +41,12 @@ public class CarService {
     }
 
     public Car findCarById(Long id) {
-        return carRepo.findById(id).orElseThrow(() -> new ElementNotFoundException("Car by id "+ id + " was not found"));
+        return carRepo.findById(id).orElseThrow(() -> new ElementNotFoundException("Car by id " + id + " was not found"));
     }
 
-    public Page<Car> findPaginatedCarsByName(int pageN,int pageS,String name) {
-        Pageable pageable = PageRequest.of(pageN-1,pageS);
-        return carRepo.findByNameContains(name,pageable);
+    public Page<Car> findPaginatedCarsByName(int pageN, int pageS, String name) {
+        Pageable pageable = PageRequest.of(pageN - 1, pageS);
+        return carRepo.findByNameContains(name, pageable);
     }
 
     public void deleteCar(Long id) {

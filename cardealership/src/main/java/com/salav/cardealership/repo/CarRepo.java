@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface CarRepo extends JpaRepository<Car, Long> {
     Page<Car> findByNameContains(String name, Pageable pageable);
+
     List<Car> findAllByNameContains(String name, Sort sort);
 }

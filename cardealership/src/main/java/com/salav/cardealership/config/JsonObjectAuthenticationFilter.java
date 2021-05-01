@@ -1,6 +1,7 @@
 package com.salav.cardealership.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salav.cardealership.config.database.LoginCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,12 +28,12 @@ public class JsonObjectAuthenticationFilter extends UsernamePasswordAuthenticati
             BufferedReader reader = request.getReader();
             StringBuilder sb = new StringBuilder();
             String line;
-            while ((line= reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
-            LoginCredentials authRequest = objectMapper.readValue(sb.toString(),LoginCredentials.class);
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(authRequest.getUsername(),authRequest.getPassword());
-            setDetails(request,token);
+            LoginCredentials authRequest = objectMapper.readValue(sb.toString(), LoginCredentials.class);
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword());
+            setDetails(request, token);
             return this.getAuthenticationManager().authenticate(token);
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage());

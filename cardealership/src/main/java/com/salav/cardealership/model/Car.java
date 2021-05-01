@@ -3,11 +3,11 @@ package com.salav.cardealership.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="cars")
+@Table(name = "cars")
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "car_id",nullable = false, updatable = false)
+    @Column(name = "car_id", nullable = false, updatable = false)
     private Long carId;
     private String name;
     private String model;
@@ -52,15 +52,5 @@ public class Car {
 
     public void setPrice(Integer price) {
         this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "Car{" +
-                "carId=" + carId +
-                ", name='" + name + '\'' +
-                ", model='" + model + '\'' +
-                ", price=" + price +
-                '}';
     }
 }

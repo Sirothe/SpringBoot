@@ -1,6 +1,6 @@
 package com.salav.cardealership.controller;
 
-import com.salav.cardealership.config.LoginCredentials;
+import com.salav.cardealership.config.database.LoginCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.web.bind.annotation.*;

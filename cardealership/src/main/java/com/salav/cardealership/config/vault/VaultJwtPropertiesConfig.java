@@ -1,4 +1,4 @@
-package com.salav.cardealership.config;
+package com.salav.cardealership.config.vault;
 
 public class VaultJwtPropertiesConfig {
     private String secret;

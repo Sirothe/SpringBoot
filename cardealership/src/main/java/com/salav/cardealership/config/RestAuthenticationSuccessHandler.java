@@ -2,6 +2,7 @@ package com.salav.cardealership.config;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.salav.cardealership.config.vault.VaultJwtPropertiesConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -32,10 +33,10 @@ public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         String token = JWT.create()
                 .withSubject(principal.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis()+ expirationTime))
+                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
                 .sign(Algorithm.HMAC256(vaultJwtPropertiesConfig.getSecret()));
-        response.addHeader("Authorization","Bearer "+ token);
+        response.addHeader("Authorization", "Bearer " + token);
         response.addHeader("Username", principal.getUsername());
-        response.addHeader("Roles",principal.getAuthorities().toString());
+        response.addHeader("Roles", principal.getAuthorities().toString());
     }
 }

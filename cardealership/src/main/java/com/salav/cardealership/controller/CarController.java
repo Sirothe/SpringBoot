@@ -20,6 +20,8 @@ import java.util.List;
 public class CarController {
     private final CarService carService;
     private final CarMapper carMapper;
+    private static final String PAGE_MAX = "pageMax";
+    private static final String TOTAL_ITEMS = "TotalItems";
 
     @Autowired
     public CarController(CarService carService, CarMapper carMapper) {
@@ -32,8 +34,8 @@ public class CarController {
         int pageS = 5;
         Page<Car> page = carService.findPaginatedCars(pageN, pageS);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageMax", String.valueOf(page.getTotalPages()));
-        headers.add("TotalItems", String.valueOf(page.getTotalElements()));
+        headers.add(PAGE_MAX, String.valueOf(page.getTotalPages()));
+        headers.add(TOTAL_ITEMS, String.valueOf(page.getTotalElements()));
         List<CarDTO> listCars = carMapper.toCarDto(page.getContent());
         return new ResponseEntity<>(listCars, headers, HttpStatus.OK);
     }
@@ -45,21 +47,21 @@ public class CarController {
     }
 
     @GetMapping("/nm={name}/p={pageNumber}")
-    public ResponseEntity<List<CarDTO>> findPaginatedCarsByName(@PathVariable (value = "pageNumber") int pageN, @PathVariable (value = "name") String name) {
+    public ResponseEntity<List<CarDTO>> findPaginatedCarsByName(@PathVariable(value = "pageNumber") int pageN, @PathVariable(value = "name") String name) {
         int pageS = 5;
         Page<Car> page = carService.findPaginatedCarsByName(pageN, pageS, name);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("pageMax", String.valueOf(page.getTotalPages()));
-        headers.add("TotalItems", String.valueOf(page.getTotalElements()));
+        headers.add(PAGE_MAX, String.valueOf(page.getTotalPages()));
+        headers.add(TOTAL_ITEMS, String.valueOf(page.getTotalElements()));
         List<CarDTO> listCars = carMapper.toCarDto(page.getContent());
         return new ResponseEntity<>(listCars, headers, HttpStatus.OK);
     }
 
     @GetMapping("/nm={name}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Car>> findAllCarsByName(@PathVariable (value = "name") String name) {
+    public ResponseEntity<List<Car>> findAllCarsByName(@PathVariable(value = "name") String name) {
         List<Car> listCars = carService.findAllByName(name);
-        return new ResponseEntity<>(listCars,HttpStatus.OK);
+        return new ResponseEntity<>(listCars, HttpStatus.OK);
     }
 
     @PostMapping()

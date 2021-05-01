@@ -1,8 +1,8 @@
 package com.salav.cardealership.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.salav.cardealership.config.vault.VaultJwtPropertiesConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -62,14 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers(HttpMethod.GET,"/car/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/dupa").permitAll()
+                .antMatchers(HttpMethod.GET, "/car/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(authenticationFilter())
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userDetailsService(),vaultJwtPropertiesConfig.getSecret()))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager(), userDetailsService(), vaultJwtPropertiesConfig.getSecret()))
                 .logout().permitAll()
                 .and()
                 .exceptionHandling()

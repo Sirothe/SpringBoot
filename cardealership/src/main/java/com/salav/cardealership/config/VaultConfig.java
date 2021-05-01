@@ -1,5 +1,6 @@
 package com.salav.cardealership.config;
 
+import com.salav.cardealership.config.vault.VaultJwtPropertiesConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.vault.authentication.ClientAuthentication;
@@ -24,7 +25,7 @@ public class VaultConfig extends AbstractVaultConfiguration {
 
     @Override
     public ClientAuthentication clientAuthentication() {
-        return new TokenAuthentication("s.kcFJdZZMS67NzZ4luTZAiG23");
+        return new TokenAuthentication("s.pDVzUJIvA0lbMtNMYriZotsP");
     }
 
     @Bean

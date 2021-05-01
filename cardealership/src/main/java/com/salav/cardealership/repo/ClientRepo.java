@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface ClientRepo extends JpaRepository<Client, Long> {
     Page<Client> findByNameContains(String name, Pageable pageable);
+
     List<Client> findAllByNameContains(String name, Sort sort);
 }
